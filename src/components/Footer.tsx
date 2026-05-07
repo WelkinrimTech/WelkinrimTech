@@ -29,7 +29,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="md:col-span-1">
           <div className="inline-flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-            <img
+            <img loading="lazy" decoding="async"
               src={`${import.meta.env.BASE_URL}welkinrim-logo-white.svg`}
               alt="Welkinrim Technologies"
               className="h-8 md:h-10 w-auto"

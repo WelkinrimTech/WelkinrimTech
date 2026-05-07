@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 const processData = [
@@ -37,7 +37,7 @@ const processData = [
 ];
 
 const GOLD = "#ffc812";
-const BEZIER = [0.34, 1.56, 0.64, 1]; // Premium spring-like easing
+const BEZIER: [number, number, number, number] = [0.34, 1.56, 0.64, 1]; // Premium spring-like easing
 
 export default function MotorArchitecture() {
   const containerRef = useRef(null);
@@ -67,7 +67,8 @@ export default function MotorArchitecture() {
           </h2>
         </motion.div>
 
-        <div className="relative min-h-[600px]">
+        <div className="w-full overflow-x-auto pb-8 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="relative min-w-[1000px] min-h-[600px] snap-start">
           
           {/* ── Top Nodes Row ──────────────────────────────────────────────── */}
           <div className="absolute top-0 left-0 w-full h-[80px] z-20 pointer-events-none">
@@ -228,6 +229,7 @@ export default function MotorArchitecture() {
             ))}
           </div>
 
+          </div>
         </div>
       </div>
     </section>

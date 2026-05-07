@@ -95,7 +95,7 @@ export default function ProductDetail() {
                   {/* Motor image container - scaled wrapper for Maelard */}
                   <div className={`relative flex items-center justify-center ${product.series === 'maelard' ? 'scale-[2.2]' : ''}`}>
                     {/* The motor photo */}
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={heroImageSrc}
                       alt={product.seriesLabel}
                       draggable={false}
@@ -120,7 +120,7 @@ export default function ProductDetail() {
                         />
                         {/* SVG logo positioned at bottom center */}
                         <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 pointer-events-none z-10">
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={seriesLogoSrc}
                             alt={product.seriesLabel}
                             className="w-28 md:w-32"
@@ -203,7 +203,7 @@ export default function ProductDetail() {
                       className="absolute inset-0 blur-[50px] opacity-20 pointer-events-none"
                       style={{ background: cfg.accent }}
                     />
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={`${import.meta.env.BASE_URL}wireframes/${product.id}.png`}
                       alt={`${product.name} technical drawing`}
                       className="w-full h-auto relative z-10 select-none"
@@ -212,7 +212,7 @@ export default function ProductDetail() {
                     />
                     {seriesLogoSrc && (
                       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-                        <img
+                        <img loading="lazy" decoding="async"
                           src={seriesLogoSrc}
                           alt={product.seriesLabel}
                           className="w-28 opacity-35"
@@ -312,7 +312,7 @@ export default function ProductDetail() {
                   />
                 ))}
                 {/* The wireframe image — contains itself within the aspect box */}
-                <img
+                <img loading="lazy" decoding="async"
                   src={product.wireframeUrl || `${import.meta.env.BASE_URL}wireframes/${product.id}.png`}
                   alt={`${product.name} Technical Drawing`}
                   className="absolute inset-0 w-full h-full object-contain p-6 md:p-10 transition-transform duration-500 group-hover:scale-[1.015]"
@@ -588,7 +588,7 @@ export default function ProductDetail() {
                   <div
                     className="h-24 flex items-center justify-center bg-white border-b border-gray-50 bg-[#fafafa]"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={`${import.meta.env.BASE_URL}favicon.svg`}
                       alt="Welkinrim"
                       className="h-10 w-auto opacity-70 transition-transform duration-300 group-hover:scale-105"

@@ -128,7 +128,6 @@ export default function Calculators() {
 
   // Calculate dynamic stats
   const liveCount = getLiveCalculators().length;
-  const soonCount = CALCULATORS.filter(c => c.status === "soon").length;
 
   // Filter calculators based on active tab and search
   const filteredCalculators = CALCULATORS.filter(calc => {
@@ -136,8 +135,6 @@ export default function Calculators() {
     let matchesFilter = true;
     if (activeFilter === "live") {
       matchesFilter = calc.status === "live";
-    } else if (activeFilter === "soon") {
-      matchesFilter = calc.status === "soon";
     } else if (activeFilter !== "all") {
       matchesFilter = calc.category === activeFilter;
     }
@@ -215,7 +212,7 @@ export default function Calculators() {
                   <div>
                     <p className="text-2xl md:text-3xl font-black text-[#ffc812]"
                        style={{ fontFamily: "Michroma, sans-serif" }}>{v}</p>
-                    <p className="text-[9px] text-white/40 tracking-widest uppercase mt-1"
+                    <p className="text-[10px] md:text-[11px] text-white/40 tracking-widest uppercase mt-1"
                        style={{ fontFamily: "Michroma, sans-serif" }}>{l}</p>
                   </div>
                 </div>
@@ -229,7 +226,7 @@ export default function Calculators() {
           <div className="max-w-[1600px] mx-auto px-4 md:px-12 lg:px-16 py-5">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               {/* Filter tabs */}
-              <div className="flex flex-wrap gap-2 order-2 lg:order-1">
+              <div className="flex overflow-x-auto gap-2 order-2 lg:order-1 pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {FILTER_TABS.map(tab => {
                   const count =
                     tab.id === "live" ? liveCount :
@@ -308,7 +305,6 @@ export default function Calculators() {
               <h2 className="text-lg font-bold text-white" style={{ fontFamily: "Michroma, sans-serif" }}>
                 {activeFilter === "all" ? "All Calculators" :
                  activeFilter === "live" ? "Live Calculators" :
-                 activeFilter === "soon" ? "Coming Soon" :
                  FILTER_TABS.find(t => t.id === activeFilter)?.label + " Calculators"}
               </h2>
               <p className="text-xs text-white/30 mt-1" style={{ fontFamily: "Lexend, sans-serif" }}>
@@ -316,8 +312,6 @@ export default function Calculators() {
                   ? "Showing all available and upcoming calculators"
                   : activeFilter === "live"
                   ? "Ready to use — click any calculator to start"
-                  : activeFilter === "soon"
-                  ? "In development — check back soon!"
                   : `Calculators for ${FILTER_TABS.find(t => t.id === activeFilter)?.label.toLowerCase()} applications`}
               </p>
             </div>

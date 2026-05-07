@@ -237,7 +237,6 @@ export default function Navbar() {
 
   const activeCat = PRODUCT_CATEGORIES.find(c => c.id === activeCategory)!;
   // Pages that should keep the dark navbar theme even when scrolled
-  const forceDark = location.startsWith("/calculators") || location.startsWith("/products");
   
   // Adaptive transparency & glassmorphism
   const homeDark = ["home", "families", "depth", "architecture", "about", "contact"];
@@ -318,7 +317,7 @@ export default function Navbar() {
             onClick={() => { navigate("/"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
             className="flex items-center gap-2 md:gap-3 ml-auto"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={`${import.meta.env.BASE_URL}welkinrim-logo-white.svg`}
               alt="Welkinrim Technologies"
               className="h-8 md:h-10 lg:h-12 w-auto transition-opacity duration-500"
@@ -348,7 +347,7 @@ export default function Navbar() {
               <button
                 key={label}
                 onClick={action}
-                className="text-left text-xs tracking-widest uppercase font-medium text-white hover:text-[#ffc812] transition-colors duration-200"
+                className="text-left text-xs tracking-widest uppercase font-medium text-white hover:text-[#ffc812] transition-colors duration-200 py-2"
                 style={{ fontFamily: "Michroma, sans-serif" }}
               >
                 {label}
@@ -411,7 +410,7 @@ export default function Navbar() {
                   <p className="text-[9px] text-white/30 tracking-[0.3em] uppercase mb-3 md:mb-4" style={{ fontFamily: "Michroma, sans-serif" }}>
                     Product Lines
                   </p>
-                  <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+                  <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     {PRODUCT_CATEGORIES.filter(c => activeSegment === "other" ? c.id === "other" : c.id !== "other").map((cat) => (
                       <button
                         key={cat.id}
@@ -473,13 +472,13 @@ export default function Navbar() {
                         <div className="w-full h-12 md:h-16 bg-white/5 mb-1 md:mb-2 flex items-center justify-center group-hover:bg-[#ffc812]/5 transition-colors duration-200">
                           <div className="flex flex-col items-center">
                             {p.series === 'haemng' || p.series === 'maelard' ? (
-                              <img
+                              <img loading="lazy" decoding="async"
                                 src={`${import.meta.env.BASE_URL}${p.series === 'maelard' ? 'Maelard.svg' : 'haemng.svg'}`}
                                 alt={p.series}
                                 className="h-5 md:h-7 w-auto opacity-80 brightness-0 invert"
                               />
                             ) : (
-                              <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="favicon" className="h-4 md:h-5 w-auto opacity-70 brightness-0 invert" />
+                              <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="favicon" className="h-4 md:h-5 w-auto opacity-70 brightness-0 invert" />
                             )}
                           </div>
                         </div>

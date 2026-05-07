@@ -178,7 +178,7 @@ export default function Products() {
                   <button
                     key={tab.id}
                     onClick={() => { window.location.hash = tab.id; }}
-                    className={`px-3 py-1.5 text-[8px] md:text-[9px] tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
+                    className={`px-3 py-1.5 text-[10px] md:text-xs tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
                       activeFamily === tab.id
                         ? "bg-[#ffc812] text-black border-[#ffc812]"
                         : "bg-transparent text-white/60 border-white/10 hover:border-white/30 hover:text-white"
@@ -201,7 +201,7 @@ export default function Products() {
                   <button
                     key={volt}
                     onClick={() => setActiveVoltage(volt)}
-                    className={`px-3 py-1.5 text-[8px] md:text-[9px] tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
+                    className={`px-3 py-1.5 text-[10px] md:text-xs tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
                       activeVoltage === volt
                         ? "bg-[#ffc812] text-black border-[#ffc812]"
                         : "bg-transparent text-white/60 border-white/10 hover:border-white/30 hover:text-white"
@@ -237,7 +237,7 @@ export default function Products() {
                   <div className="w-1 h-6 md:h-8 flex-shrink-0" style={{ background: cfg.accent }} />
                   <div>
                     {'useSvgLogo' in cfg && cfg.useSvgLogo ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={`${import.meta.env.BASE_URL}${(cfg as { logoSrc: string }).logoSrc}`}
                         alt={cfg.label}
                         className="h-6 md:h-8 w-auto brightness-0 invert"
@@ -321,7 +321,7 @@ function ProductGrid({
             {(p.series === "haemng" || p.series === "maelard") ? (
               p.thumbnailUrl ? (
                 <div className="relative z-10 w-full h-full flex items-center justify-center p-4">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={p.thumbnailUrl}
                     alt={p.model}
                     className="max-w-full max-h-full object-contain"
@@ -331,15 +331,15 @@ function ProductGrid({
               ) : (
                 <div className="relative z-10">
                   {p.series === "haemng" ? (
-                    <img src={`${import.meta.env.BASE_URL}haemng.svg`} alt="Haemng" className="h-10 md:h-14 w-auto brightness-0 invert opacity-60" />
+                    <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}haemng.svg`} alt="Haemng" className="h-10 md:h-14 w-auto brightness-0 invert opacity-60" />
                   ) : (
-                    <img src={`${import.meta.env.BASE_URL}Maelard.svg`} alt="Maelard" className="h-8 md:h-10 w-auto brightness-0 invert opacity-60" />
+                    <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}Maelard.svg`} alt="Maelard" className="h-8 md:h-10 w-auto brightness-0 invert opacity-60" />
                   )}
                 </div>
               )
             ) : (
               <div className="relative z-10">
-                <img
+                <img loading="lazy" decoding="async"
                   src={`${import.meta.env.BASE_URL}favicon.svg`}
                   alt="Welkinrim"
                   className="h-10 md:h-12 w-auto opacity-40 brightness-0 invert"

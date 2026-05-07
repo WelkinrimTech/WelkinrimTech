@@ -219,7 +219,7 @@ function FamilyCard({
       >
         {/* Background image */}
         <div className="absolute inset-0 pointer-events-none">
-          <img
+          <img loading="lazy" decoding="async"
             src={getImage(fam)}
             alt={fam.name}
             draggable="false"

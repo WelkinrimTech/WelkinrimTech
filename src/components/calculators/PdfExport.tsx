@@ -172,7 +172,7 @@ export function PdfTemplateHeader({ calculatorName }: { calculatorName: string }
     <div className="pdf-header pb-6 mb-6 pt-4 px-4 border-b border-white/10 bg-[#0a0a0a] relative">
       <div className="flex items-end justify-between">
         <div className="flex items-center gap-4">
-          <img src="/welkinrim-logo-white.svg" className="h-8 opacity-90" alt="WelkinRim" />
+          <img loading="lazy" decoding="async" src="/welkinrim-logo-white.svg" className="h-8 opacity-90" alt="WelkinRim" />
           <div className="h-6 w-px bg-white/20 mx-2" />
           <div>
             <p className="text-[10px] tracking-[0.3em] uppercase text-[#ffc812]" style={{ fontFamily: "Michroma, sans-serif" }}>

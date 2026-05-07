@@ -205,7 +205,7 @@ function TimelineNode({ milestone, index }: { milestone: typeof MILESTONES[numbe
       <div className={`flex-1 md:w-[calc(50%-40px)] transition-all duration-700 ease-out ${
         visible ? "opacity-100 translate-y-0" : `opacity-0 translate-y-10 ${isLeft ? "md:-translate-x-8" : "md:translate-x-8"}`
       }`} style={{ transitionDelay: "0.12s" }}>
-        <div className={`relative bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] p-6 md:p-7 hover:border-[#ffc812]/30 hover:bg-white/[0.06] transition-all duration-400 group ${
+        <div className={`relative bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] p-4 md:p-7 hover:border-[#ffc812]/30 hover:bg-white/[0.06] transition-all duration-400 group ${
           isLeft ? "md:mr-10" : "md:ml-10"
         }`}>
           {/* Year + highlight */}
@@ -302,7 +302,7 @@ export default function About() {
             <p className="text-[10px] tracking-[0.4em] uppercase text-[#ffc812]/80 mb-3" style={{ fontFamily: "Michroma, sans-serif" }}>
               Indigenously Developed
             </p>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[0.95] mb-4" style={{ fontFamily: "Michroma, sans-serif" }}>
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] md:leading-[0.95] mb-4" style={{ fontFamily: "Michroma, sans-serif" }}>
               Tomorrow's<br />
               <span className="text-[#ffc812]">Motor & Drive</span><br />
               Technology
@@ -466,7 +466,7 @@ export default function About() {
                     {/* Avatar */}
                     <div className="w-16 h-16 bg-black flex items-center justify-center mb-5 relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(255,200,18,0.15)] transition-shadow duration-300">
                       {member.image ? (
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={`${import.meta.env.BASE_URL}${member.image}`} 
                           alt={member.name} 
                           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"

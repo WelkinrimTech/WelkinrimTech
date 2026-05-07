@@ -225,7 +225,7 @@ export default function EngineeringDepth() {
               </p>
             </div>
 
-            <img
+            <img loading="lazy" decoding="async"
               key={activeIdx}
               src={`${import.meta.env.BASE_URL}motor-hero.png`}
               alt={active.fullLabel}

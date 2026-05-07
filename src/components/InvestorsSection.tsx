@@ -36,7 +36,7 @@ export default function InvestorsSection() {
             <Reveal key={inv.name} delay={i * 80}>
               <div className="group cursor-default flex items-center justify-center">
                 {inv.logo ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={`${import.meta.env.BASE_URL}${inv.logo}`}
                     alt={inv.full}
                     className={`h-12 md:h-16 w-auto max-w-[180px] object-contain opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out ${!inv.noFilter ? 'brightness-0 invert' : ''}`}

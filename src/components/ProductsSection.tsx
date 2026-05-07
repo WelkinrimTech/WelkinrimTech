@@ -36,11 +36,11 @@ function ProductCard({ p, expanded, onToggle }: {
         {/* Series visual */}
         <div className="relative z-10 mb-1 md:mb-2">
           {p.series === "haemng" ? (
-            <img src={`${import.meta.env.BASE_URL}haemng.svg`} alt="Haemng" className="h-10 md:h-14 w-auto" style={{ opacity: 0.8 }} />
+            <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}haemng.svg`} alt="Haemng" className="h-10 md:h-14 w-auto" style={{ opacity: 0.8 }} />
           ) : p.series === "maelard" ? (
-            <img src={`${import.meta.env.BASE_URL}Maelard.svg`} alt="Maelard" className="h-8 md:h-10 w-auto" style={{ opacity: 0.85 }} />
+            <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}Maelard.svg`} alt="Maelard" className="h-8 md:h-10 w-auto" style={{ opacity: 0.85 }} />
           ) : (
-            <img
+            <img loading="lazy" decoding="async"
               src={`${import.meta.env.BASE_URL}favicon.svg`}
               alt="Welkinrim"
               className="h-10 md:h-12 w-auto opacity-90"
@@ -252,7 +252,7 @@ export default function ProductsSection() {
                   <div className="w-1 h-8 flex-shrink-0" style={{ background: cfg.accent }} />
                   <div>
                     {'useSvgLogo' in cfg && cfg.useSvgLogo ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={`${import.meta.env.BASE_URL}${cfg.logoSrc}`}
                         alt={cfg.label}
                         className="h-8 w-auto"

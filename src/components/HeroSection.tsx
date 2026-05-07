@@ -131,7 +131,7 @@ export default function HeroSection() {
         </div>
 
         {/* Animated industry name */}
-        <div className="h-[50px] md:h-[80px] lg:h-[100px] xl:h-[10vw] overflow-hidden relative">
+        <div className="h-auto md:h-[80px] lg:h-[100px] xl:h-[10vw] overflow-hidden relative min-h-[50px]">
           {industries.map((ind, i) => (
             <div
               key={ind.id}
@@ -142,7 +142,7 @@ export default function HeroSection() {
               style={{ top: 0 }}
             >
               <h1
-                className="text-[42px] md:text-[64px] lg:text-[86px] xl:text-[8vw] font-bold uppercase leading-[0.9] tracking-tighter"
+                className="text-[32px] sm:text-[42px] md:text-[64px] lg:text-[86px] xl:text-[8vw] font-bold uppercase leading-[0.9] tracking-tighter"
                 style={{ fontFamily: 'Michroma, sans-serif' }}
               >
                 <span className="text-white">
@@ -181,7 +181,7 @@ export default function HeroSection() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="mt-4 md:mt-6 flex flex-wrap gap-3">
+        <div className="mt-4 md:mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
           <button
             onClick={() => {
               document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
