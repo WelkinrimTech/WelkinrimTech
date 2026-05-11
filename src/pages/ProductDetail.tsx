@@ -88,10 +88,10 @@ export default function ProductDetail() {
 
           {/* ── Hero motor image (transparent PNG) + series logo ── */}
           {heroImageSrc && (
-            <div className="absolute inset-0 z-10 pointer-events-none select-none hidden lg:block">
+            <div className="absolute inset-0 z-10 pointer-events-none select-none opacity-20 lg:opacity-100">
               <div className="max-w-[1600px] mx-auto h-full relative px-4 md:px-12 lg:px-16">
                 {/* Flex column: motor image on top, series logo directly underneath */}
-              <div className="absolute right-[4%] top-0 bottom-0 w-[40%] flex flex-col items-center justify-center overflow-visible">
+              <div className="absolute -right-10 lg:right-[4%] top-0 bottom-0 w-[80%] md:w-[50%] lg:w-[40%] flex flex-col items-center justify-center overflow-visible">
                   {/* Motor image container - scaled wrapper for Maelard */}
                   <div className={`relative flex items-center justify-center ${product.series === 'maelard' ? 'scale-[2.2]' : ''}`}>
                     {/* The motor photo */}
@@ -342,8 +342,8 @@ export default function ProductDetail() {
                 </h2>
               </div>
 
-              <div className="border border-gray-100 overflow-hidden">
-                <table className="w-full">
+              <div className="border border-gray-100 overflow-x-auto scrollbar-hide">
+                <table className="w-full min-w-[500px]">
                   <thead>
                     <tr style={{ background: cfg.accent }}>
                       {[

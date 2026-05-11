@@ -104,7 +104,7 @@ function CalculatorCard({ calc }: CalculatorCardProps) {
 
         {/* Stats row */}
         {calc.inputCount && calc.outputCount && (
-          <div className="flex items-center gap-3 text-[8px] text-white/30 pt-2 border-t border-white/5"
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-[8px] text-white/30 pt-2 border-t border-white/5"
                style={{ fontFamily: "Michroma, sans-serif" }}>
             <span className="tracking-widest uppercase">
               <strong className="text-white/60">{calc.inputCount}</strong> inputs
@@ -210,9 +210,9 @@ export default function Calculators() {
               ].map(({ v, l }) => (
                 <div key={l} className="flex items-start gap-3">
                   <div>
-                    <p className="text-2xl md:text-3xl font-black text-[#ffc812]"
+                    <p className="text-xl md:text-3xl font-black text-[#ffc812]"
                        style={{ fontFamily: "Michroma, sans-serif" }}>{v}</p>
-                    <p className="text-[10px] md:text-[11px] text-white/40 tracking-widest uppercase mt-1"
+                    <p className="text-[9px] md:text-[11px] text-white/40 tracking-widest uppercase mt-1"
                        style={{ fontFamily: "Michroma, sans-serif" }}>{l}</p>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function Calculators() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveFilter(tab.id)}
-                      className={`group flex items-center gap-2 px-4 py-2 text-[9px] tracking-widest uppercase font-bold transition-all duration-200 border ${
+                      className={`group flex-shrink-0 flex items-center gap-2 px-4 py-2 text-[9px] tracking-widest uppercase font-bold transition-all duration-200 border whitespace-nowrap ${
                         isActive
                           ? "bg-[#ffc812] text-black border-[#ffc812]"
                           : "bg-transparent text-white/60 border-white/10 hover:border-white/30 hover:text-white"

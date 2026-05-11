@@ -173,12 +173,12 @@ export default function Products() {
               <span className="text-[9px] tracking-[0.2em] text-white/30 font-bold uppercase w-16" style={{ fontFamily: "Michroma, sans-serif" }}>
                 Family
               </span>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex overflow-x-auto whitespace-nowrap gap-1.5 pb-2 scrollbar-hide w-full max-w-[90vw]">
                 {FAMILIES.map(tab => (
                   <button
                     key={tab.id}
                     onClick={() => { window.location.hash = tab.id; }}
-                    className={`px-3 py-1.5 text-[10px] md:text-xs tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
+                    className={`flex-shrink-0 px-3 py-1.5 text-[10px] md:text-xs tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
                       activeFamily === tab.id
                         ? "bg-[#ffc812] text-black border-[#ffc812]"
                         : "bg-transparent text-white/60 border-white/10 hover:border-white/30 hover:text-white"
@@ -196,12 +196,12 @@ export default function Products() {
               <span className="text-[9px] tracking-[0.2em] text-white/30 font-bold uppercase w-16" style={{ fontFamily: "Michroma, sans-serif" }}>
                 Voltage
               </span>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex overflow-x-auto whitespace-nowrap gap-1.5 pb-2 scrollbar-hide w-full max-w-[90vw]">
                 {VOLTAGES.map(volt => (
                   <button
                     key={volt}
                     onClick={() => setActiveVoltage(volt)}
-                    className={`px-3 py-1.5 text-[10px] md:text-xs tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
+                    className={`flex-shrink-0 px-3 py-1.5 text-[10px] md:text-xs tracking-widest uppercase font-bold rounded-full transition-all duration-300 border ${
                       activeVoltage === volt
                         ? "bg-[#ffc812] text-black border-[#ffc812]"
                         : "bg-transparent text-white/60 border-white/10 hover:border-white/30 hover:text-white"
@@ -369,7 +369,7 @@ function ProductGrid({
               <span style={{ color: cfg.accent }}>{p.model.split(' ')[0]}</span>
               <span className="text-white"> {p.model.split(' ').slice(1).join(' ')}</span>
             </h3>
-            <div className="grid grid-cols-3 gap-px bg-white/5 mt-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-white/5 mt-auto">
               {p.keySpecs.map((s: { label: string; value: string }) => (
                 <div key={s.label} className="bg-[#0a0a0a] px-2 py-2 text-center">
                   <p className="text-[10px] font-black text-white" style={{ fontFamily: "Michroma, sans-serif" }}>

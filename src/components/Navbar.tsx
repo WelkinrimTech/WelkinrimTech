@@ -326,7 +326,7 @@ export default function Navbar() {
 
           {/* ── Mobile toggle ── */}
           <button
-            className={`md:hidden flex flex-col gap-1.5 transition-colors duration-300 ml-4 ${useLightText ? "text-white" : "text-white"}`}
+            className={`md:hidden flex flex-col gap-1.5 transition-colors duration-300 ml-4 p-2 -mr-2 ${useLightText ? "text-white" : "text-white"}`}
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />

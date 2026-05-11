@@ -119,7 +119,7 @@ export default function HeroSection() {
       })}
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-end pb-20 md:pb-28 lg:pb-36 px-4 md:px-12 lg:px-16 max-w-[1600px] mx-auto">
+      <div className="relative z-10 h-full flex flex-col justify-end pb-32 md:pb-36 lg:pb-40 px-4 md:px-12 lg:px-16 max-w-[1600px] mx-auto">
         {/* Fixed headline */}
         <div className="mb-1">
           <p
@@ -142,7 +142,7 @@ export default function HeroSection() {
               style={{ top: 0 }}
             >
               <h1
-                className="text-[32px] sm:text-[42px] md:text-[64px] lg:text-[86px] xl:text-[8vw] font-bold uppercase leading-[0.9] tracking-tighter"
+                className="text-[28px] sm:text-[42px] md:text-[64px] lg:text-[86px] xl:text-[8vw] font-bold uppercase leading-[0.9] tracking-tighter"
                 style={{ fontFamily: 'Michroma, sans-serif' }}
               >
                 <span className="text-white">
@@ -181,7 +181,7 @@ export default function HeroSection() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="mt-4 md:mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+        <div className="mt-4 md:mt-6 flex flex-wrap items-center gap-3">
           <button
             onClick={() => {
               document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
@@ -205,7 +205,7 @@ export default function HeroSection() {
 
       {/* Industry Selector — left-aligned tabs */}
       <div
-        className="absolute bottom-16 md:bottom-20 left-4 md:left-12 lg:left-16 z-20 flex items-center flex-wrap gap-y-2"
+        className="absolute bottom-16 md:bottom-20 left-4 md:left-12 lg:left-16 z-20 flex items-center flex-wrap gap-y-2 pr-4 max-w-[90vw]"
         onMouseEnter={() => handleHoverArea(true)}
         onMouseLeave={() => handleHoverArea(false)}
       >
@@ -213,7 +213,7 @@ export default function HeroSection() {
           <div key={ind.id} className="flex items-center">
             <button
               onClick={() => goTo(i)}
-              className={`text-xs tracking-[0.15em] uppercase font-bold pb-1 transition-all duration-200 ${i === activeIdx
+              className={`text-[10px] md:text-xs tracking-[0.15em] uppercase font-bold pb-1 transition-all duration-200 ${i === activeIdx
                   ? "text-white border-b-2 border-[#ffc812]"
                   : "text-white/50 hover:text-white border-b-2 border-transparent"
                 }`}
@@ -222,14 +222,14 @@ export default function HeroSection() {
               {ind.label}
             </button>
             {i < industries.length - 1 && (
-              <span className="mx-3 text-sm select-none text-white/30">|</span>
+              <span className="mx-2 md:mx-3 text-xs md:text-sm select-none text-white/30">|</span>
             )}
           </div>
         ))}
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-6 md:bottom-8 right-6 md:right-10 z-10 flex flex-col items-center gap-2">
+      <div className="absolute bottom-6 md:bottom-8 right-6 md:right-10 z-10 hidden sm:flex flex-col items-center gap-2">
         <div className="w-px h-10 md:h-12 bg-gradient-to-b from-transparent to-[#ffc812]" />
         <span className="text-[9px] md:text-[10px] tracking-widest uppercase rotate-90 origin-center translate-y-4 md:translate-y-6 text-white/40" style={{ fontFamily: 'Michroma, sans-serif' }}>Scroll</span>
       </div>

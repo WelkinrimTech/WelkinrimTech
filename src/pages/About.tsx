@@ -176,7 +176,7 @@ function StatCard({ value, suffix, label }: { value: number; suffix?: string; la
       <p className="text-2xl md:text-4xl font-black text-[#ffc812] leading-none" style={{ fontFamily: "Michroma, sans-serif" }}>
         {count}{suffix}
       </p>
-      <p className="text-[9px] text-white/40 tracking-[0.25em] uppercase mt-2" style={{ fontFamily: "Michroma, sans-serif" }}>
+      <p className="text-[9px] text-white/40 tracking-[0.2em] uppercase mt-2 leading-tight" style={{ fontFamily: "Michroma, sans-serif" }}>
         {label}
       </p>
     </div>
@@ -211,7 +211,7 @@ function TimelineNode({ milestone, index }: { milestone: typeof MILESTONES[numbe
           {/* Year + highlight */}
           <div className="flex items-center justify-between gap-3 mb-4">
             <div
-              className="px-4 py-1.5 bg-[#ffc812] text-black text-xs font-black tracking-widest"
+              className="px-3 md:px-4 py-1.5 bg-[#ffc812] text-black text-[10px] md:text-xs font-black tracking-widest ml-1"
               style={{ fontFamily: "Michroma, sans-serif", transform: "skewX(-8deg)" }}
             >
               <span style={{ display: "inline-block", transform: "skewX(8deg)" }}>{milestone.year}</span>
@@ -302,7 +302,7 @@ export default function About() {
             <p className="text-[10px] tracking-[0.4em] uppercase text-[#ffc812]/80 mb-3" style={{ fontFamily: "Michroma, sans-serif" }}>
               Indigenously Developed
             </p>
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] md:leading-[0.95] mb-4" style={{ fontFamily: "Michroma, sans-serif" }}>
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.15] md:leading-[0.95] mb-4" style={{ fontFamily: "Michroma, sans-serif" }}>
               Tomorrow's<br />
               <span className="text-[#ffc812]">Motor & Drive</span><br />
               Technology
@@ -343,7 +343,7 @@ export default function About() {
                 </span>
                 <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#ffc812]/60" />
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold text-white" style={{ fontFamily: "Michroma, sans-serif" }}>
+              <h2 className="text-2xl md:text-5xl font-bold text-white" style={{ fontFamily: "Michroma, sans-serif" }}>
                 Building India's<br />
                 <span className="text-[#ffc812]">Propulsion</span> Future
               </h2>

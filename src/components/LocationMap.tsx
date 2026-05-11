@@ -203,7 +203,7 @@ export default function LocationMap() {
         <div className="flex-1 min-h-0 flex flex-col lg:grid lg:grid-cols-3 gap-0 rounded-sm overflow-hidden shadow-2xl border border-white/10 h-[600px] lg:h-full">
 
           {/* ── Map pane ── */}
-          <div className="lg:col-span-2 relative min-h-[300px] lg:min-h-0 h-full">
+          <div className="lg:col-span-2 relative h-[300px] lg:h-full flex-shrink-0">
             <div ref={mapRef} className="w-full h-full" />
             {/* WebGL fallback */}
             {webGlError && (
@@ -253,7 +253,7 @@ export default function LocationMap() {
           </div>
 
           {/* ── Sidebar ── */}
-          <div className="bg-[#0d1b2a] flex flex-col overflow-y-auto h-full border-l border-white/10">
+          <div className="bg-[#0d1b2a] flex flex-col flex-1 min-h-0 overflow-y-auto border-t lg:border-t-0 lg:border-l border-white/10">
 
             {/* Our facility header */}
             <div className="px-5 py-4 border-b border-white/5">
