@@ -38,7 +38,7 @@ export default function ProductDetail() {
     );
   }
 
-  const cfg = SERIES_CFG[product.series];
+  const cfg = SERIES_CFG[product.series as keyof typeof SERIES_CFG] || SERIES_CFG.other;
   const siblings = PRODUCTS.filter(p => p.series === product.series && p.id !== product.id).slice(0, 4);
 
   /* ── series logo path (data-driven for future admin use) ── */

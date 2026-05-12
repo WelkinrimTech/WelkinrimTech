@@ -170,6 +170,12 @@ export default function Navbar() {
   const isHome = location === "/" || location === "";
   const isAboutPage = location.startsWith("/about");
 
+  // Close menus automatically whenever the route changes
+  useEffect(() => {
+    setMenuOpen(false);
+    setMegaOpen(false);
+  }, [location]);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
@@ -219,11 +225,11 @@ export default function Navbar() {
     setMenuOpen(false);
     setMegaOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    // Use window.location for hash-based navigation to ensure hash is preserved
+    
     if (categoryId) {
-      window.location.href = `/products#${categoryId}`;
+      navigate(`/products#${categoryId}`);
     } else {
-      window.location.href = "/products";
+      navigate("/products");
     }
   };
 
@@ -269,8 +275,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             {[
               { label: "Home", action: () => scrollToSection("home") },
-              { label: "About", action: () => { setMenuOpen(false); navigate("/about"); } },
-              { label: "Calculators", action: () => { setMenuOpen(false); navigate("/calculators"); } },
+              { label: "About", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/about"); } },
+              { label: "Calculators", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/calculators"); } },
             ].map(({ label, action }) => (
               <button
                 key={label}
@@ -341,8 +347,8 @@ export default function Navbar() {
             {[
               { label: "Home", action: () => scrollToSection("home") },
               { label: "Products", action: () => goToProducts() },
-              { label: "Calculators", action: () => { setMenuOpen(false); navigate("/calculators"); } },
-              { label: "About", action: () => { setMenuOpen(false); navigate("/about"); } },
+              { label: "Calculators", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/calculators"); } },
+              { label: "About", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/about"); } },
             ].map(({ label, action }) => (
               <button
                 key={label}

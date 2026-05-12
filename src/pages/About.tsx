@@ -1,7 +1,7 @@
 // src/pages/About.tsx
 // About Us — Premium timeline-based page with scroll animations
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import Footer from "@/components/Footer";
 import InvestorsSection from "@/components/InvestorsSection";
