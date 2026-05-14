@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { PRODUCTS } from "@/data/products";
+import { fetchProducts } from "@/lib/supabase";
+import type { Product } from "@/config/products.config";
 
-const PRODUCT_CATEGORIES = [
+// Category configuration with icons - products will be populated dynamically
+const CATEGORY_CONFIG = [
   {
     id: "haemng",
     label: "Haemng Series",
     menuLabel: "HAEMNG",
-    tagline: "UAV & eVTOL Motors — 11 variants",
+    tagline: "UAV & eVTOL Motors",
     icon: (
-      <div 
+      <div
         className="w-5 h-5 bg-current transition-all"
-        style={{ 
+        style={{
           maskImage: "url(/assets/prod_list/haemng_logo_128.svg)",
           WebkitMaskImage: "url(/assets/prod_list/haemng_logo_128.svg)",
           maskSize: "contain",
@@ -23,17 +26,16 @@ const PRODUCT_CATEGORIES = [
         }}
       />
     ),
-    products: PRODUCTS.filter(p => p.series === "haemng"),
   },
   {
     id: "maelard",
     label: "Maelard Series",
     menuLabel: "MAELARD",
-    tagline: "Marine, UAV & Multi-mission — 10 variants",
+    tagline: "Marine, UAV & Multi-mission",
     icon: (
-      <div 
+      <div
         className="w-5 h-5 bg-current transition-all"
-        style={{ 
+        style={{
           maskImage: "url(/assets/prod_list/maelard_logo_128.svg)",
           WebkitMaskImage: "url(/assets/prod_list/maelard_logo_128.svg)",
           maskSize: "contain",
@@ -45,17 +47,16 @@ const PRODUCT_CATEGORIES = [
         }}
       />
     ),
-    products: PRODUCTS.filter(p => p.series === "maelard"),
   },
   {
     id: "stroke",
     label: "Stroke Series",
     menuLabel: "STROKE",
-    tagline: "High-Density Storage & Industrial — 4 models",
+    tagline: "High-Density Storage & Industrial",
     icon: (
-      <div 
+      <div
         className="w-5 h-5 bg-current transition-all"
-        style={{ 
+        style={{
           maskImage: "url(/assets/prod_list/stoaek_128.svg)",
           WebkitMaskImage: "url(/assets/prod_list/stoaek_128.svg)",
           maskSize: "contain",
@@ -67,58 +68,53 @@ const PRODUCT_CATEGORIES = [
         }}
       />
     ),
-    products: PRODUCTS.filter(p => p.series === "stroke"),
   },
   {
     id: "vagans",
     label: "Vagans Series",
     menuLabel: "VAGANS",
-    tagline: "Mobile & Robotic Platforms — 6 models",
+    tagline: "Mobile & Robotic Platforms",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
         <path d="M4 12h16M12 4l8 8-8 8" />
         <circle cx="12" cy="12" r="9" />
       </svg>
     ),
-    products: PRODUCTS.filter(p => p.series === "vagans"),
   },
   {
     id: "sciatic",
     label: "Sciatic Series",
     menuLabel: "SCIATIC",
-    tagline: "High-Frequency & Precision Control — 3 models",
+    tagline: "High-Frequency & Precision Control",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
         <path d="M2 12h4l2-8 4 16 2-8h8" />
       </svg>
     ),
-    products: PRODUCTS.filter(p => p.series === "sciatic"),
   },
   {
     id: "esc",
     label: "ESCs",
     menuLabel: "ESC",
-    tagline: "Electronic Speed Controllers — 9 models",
+    tagline: "Electronic Speed Controllers",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
         <rect x="2" y="6" width="20" height="12" rx="1" />
         <path d="M6 10h2M10 10h2M14 10h2M6 14h4M12 14h4" />
       </svg>
     ),
-    products: PRODUCTS.filter(p => p.series === "esc"),
   },
   {
     id: "ips",
     label: "Integrated Power Systems",
     menuLabel: "IPS",
-    tagline: "Motor + ESC Matched Assemblies — 5 combos",
+    tagline: "Motor + ESC Matched Assemblies",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
         <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
         <path d="M10 7h4M7 10v4M17 10v4M10 17h4" />
       </svg>
     ),
-    products: PRODUCTS.filter(p => p.series === "ips"),
   },
   {
     id: "fc",
@@ -132,7 +128,6 @@ const PRODUCT_CATEGORIES = [
         <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
       </svg>
     ),
-    products: PRODUCTS.filter(p => p.series === "fc"),
   },
   {
     id: "other",
@@ -145,7 +140,6 @@ const PRODUCT_CATEGORIES = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     ),
-    products: PRODUCTS.filter(p => p.series === "other"),
   },
 ];
 
@@ -161,14 +155,42 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(PRODUCT_CATEGORIES[0].id);
+  const [activeCategory, setActiveCategory] = useState(CATEGORY_CONFIG[0].id);
   const [activeSegment, setActiveSegment] = useState("uav");
   const [currentSection, setCurrentSection] = useState("home");
+  const [products, setProducts] = useState<Product[]>(PRODUCTS); // Start with static, update with fetched
+  const [productsLoaded, setProductsLoaded] = useState(false);
 
   const [location, navigate] = useLocation();
 
   const isHome = location === "/" || location === "";
   const isAboutPage = location.startsWith("/about");
+
+  // Fetch products from database on mount
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const dbProducts = await fetchProducts();
+        if (dbProducts && dbProducts.length > 0) {
+          setProducts(dbProducts);
+        }
+      } catch (err) {
+        console.error('Failed to fetch products for navbar:', err);
+        // Keep using static PRODUCTS as fallback
+      }
+      setProductsLoaded(true);
+    };
+    loadProducts();
+  }, []);
+
+  // Build PRODUCT_CATEGORIES dynamically from fetched products
+  const PRODUCT_CATEGORIES = useMemo(() => {
+    return CATEGORY_CONFIG.map(cat => ({
+      ...cat,
+      tagline: `${cat.tagline} — ${products.filter(p => p.series === cat.id).length} variants`,
+      products: products.filter(p => p.series === cat.id),
+    })).filter(cat => cat.products.length > 0); // Only show categories with products
+  }, [products]);
 
   // Close menus automatically whenever the route changes
   useEffect(() => {
@@ -181,7 +203,7 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll);
 
     // Observer for adaptive navbar transparency & glassmorphism
-    const sections = isHome 
+    const sections = isHome
       ? ["home", "products", "families", "depth", "architecture", "about", "contact"]
       : isAboutPage
         ? ["about-hero", "about-timeline", "about-usp", "about-expertise", "about-team", "about-partners", "about-cta"]
@@ -225,7 +247,7 @@ export default function Navbar() {
     setMenuOpen(false);
     setMegaOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    
+
     if (categoryId) {
       navigate(`/products#${categoryId}`);
     } else {
@@ -239,21 +261,25 @@ export default function Navbar() {
     navigate(`/products/${id}`);
   };
 
+  // Set first category with products as default active
+  useEffect(() => {
+    if (PRODUCT_CATEGORIES.length > 0 && !PRODUCT_CATEGORIES.find(c => c.id === activeCategory)) {
+      setActiveCategory(PRODUCT_CATEGORIES[0].id);
+    }
+  }, [PRODUCT_CATEGORIES, activeCategory]);
 
+  const activeCat = PRODUCT_CATEGORIES.find(c => c.id === activeCategory) || PRODUCT_CATEGORIES[0];
 
-  const activeCat = PRODUCT_CATEGORIES.find(c => c.id === activeCategory)!;
-  // Pages that should keep the dark navbar theme even when scrolled
-  
   // Adaptive transparency & glassmorphism
   const homeDark = ["home", "families", "depth", "architecture", "about", "contact"];
-  const aboutDark = ["about-hero", "about-timeline", "about-expertise", "about-team", "about-partners", "about-cta"];
-  
+  const aboutDark = ["about-hero", "about-timeline", "about-usp", "about-expertise", "about-team", "about-partners", "about-cta"];
+
   const isTransparent = !scrolled && !megaOpen;
   const isGlass = scrolled && !megaOpen && (
     (isHome && homeDark.includes(currentSection)) ||
     (isAboutPage && aboutDark.includes(currentSection))
   );
-  
+
   const useLightText = true;
 
   // Background Class Logic
@@ -370,14 +396,12 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* ── Mega Menu Dropdown ── */}
       <div
         className={`fixed top-[60px] md:top-[72px] left-0 right-0 z-40 transition-all duration-300 ${megaOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
           }`}
       >
         <div className="bg-[#050505] border-b border-white/10 shadow-2xl overflow-y-auto max-h-[80vh] md:max-h-none">
-
-
-
           <div className="max-w-[1600px] mx-auto px-4 md:px-12 lg:px-16 py-6 md:py-8">
             {/* Segment pills */}
             <div className="flex items-center gap-2 mb-5 py-1 px-1 overflow-x-auto scrollbar-hide">
@@ -388,8 +412,8 @@ export default function Navbar() {
                     setActiveSegment(seg.id);
                     if (seg.id === "other") {
                       setActiveCategory("other");
-                    } else if (seg.id === "uav") {
-                      setActiveCategory("haemng");
+                    } else if (seg.id === "uav" && PRODUCT_CATEGORIES.length > 0) {
+                      setActiveCategory(PRODUCT_CATEGORIES[0].id);
                     }
                   }}
                   className={`flex items-center gap-2 px-6 py-1.5 text-[8px] tracking-[0.15em] uppercase font-bold transition-all duration-300 ${activeSegment === seg.id
@@ -455,7 +479,7 @@ export default function Navbar() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <p className="text-[9px] text-white/30 tracking-[0.3em] uppercase" style={{ fontFamily: "Michroma, sans-serif" }}>
-                        {activeCat.label} <span className="lowercase inline-block ml-1 tracking-normal font-bold">({activeCat.products.length} variants)</span>
+                        {activeCat?.label} <span className="lowercase inline-block ml-1 tracking-normal font-bold">({activeCat?.products.length || 0} variants)</span>
                       </p>
                     </div>
                     <button
@@ -469,7 +493,7 @@ export default function Navbar() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3">
-                    {activeCat.products.slice(0, 4).map((p) => (
+                    {activeCat?.products.slice(0, 4).map((p) => (
                       <button
                         key={p.id}
                         onClick={() => goToProduct(p.id)}
@@ -493,13 +517,13 @@ export default function Navbar() {
                           <span className="text-white">{p.model.split(' ').slice(1).join(' ')}</span>
                         </p>
                         <div className="flex flex-wrap gap-0.5 md:gap-1 mt-1 md:mt-1.5">
-                          {p.keySpecs.map((s) => (
+                          {p.keySpecs.slice(0, 3).map((s) => (
                             <span key={s.label} className="text-[6px] md:text-[7px] bg-white/10 text-white/60 px-1 py-0.5" style={{ fontFamily: "Lexend, sans-serif" }}>{s.value}</span>
                           ))}
                         </div>
                       </button>
                     ))}
-                    {activeCat.products.length > 4 && (
+                    {activeCat?.products.length > 4 && (
                       <button
                         onClick={() => goToProducts(activeCategory)}
                         className="border border-dashed border-white/10 hover:border-[#ffc812] p-2 md:p-3 flex flex-col items-center justify-center gap-1 md:gap-2 group transition-all duration-200"
@@ -516,7 +540,7 @@ export default function Navbar() {
 
                   <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-0">
                     <p className="text-[9px] md:text-[10px] text-white/30" style={{ fontFamily: "Lexend, sans-serif" }}>
-                      36+ product variants across 5 lines
+                      {products.length}+ product variants across {PRODUCT_CATEGORIES.length} lines
                     </p>
                     <button
                       onClick={() => scrollToSection("contact")}
@@ -566,5 +590,5 @@ export default function Navbar() {
         <div className="fixed inset-0 z-30" onClick={() => setMegaOpen(false)} />
       )}
     </>
-   );
+  );
 }
