@@ -1,23 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { SERIES_CFG, PRODUCTS } from "@/data/products";
+import { SERIES_CONFIG, Product, USE_DATABASE } from "@/config/products.config";
+import { PRODUCTS } from "@/data/products";
 import { fetchProducts } from "@/lib/supabase";
 import Footer from "@/components/Footer";
-
-type Product = {
-  id: string;
-  series: "haemng" | "maelard" | "esc" | "fc" | "ips" | "stroke" | "vagans" | "sciatic" | "other";
-  seriesLabel: string;
-  model: string;
-  name: string;
-  tag: string;
-  application: string;
-  keySpecs: { label: string; value: string }[];
-  allSpecs: { label: string; value: string }[];
-  perf?: any[];
-  thumbnailUrl?: string | null;
-  iconUrl?: string | null;
-};
 
 // Hook to get current hash and subscribe to hash changes
 function useHash() {
@@ -31,8 +17,6 @@ function useHash() {
 
   return hash;
 }
-
-const USE_DATABASE = true; // Fetch from Supabase
 
 export default function Products() {
   const [, navigate] = useLocation();
@@ -110,9 +94,9 @@ export default function Products() {
     return matchFamily && matchVoltage && matchSearch;
   });
 
-  const grouped = Object.keys(SERIES_CFG).map(key => ({
+  const grouped = Object.keys(SERIES_CONFIG).map(key => ({
     key,
-    cfg: SERIES_CFG[key as keyof typeof SERIES_CFG],
+    cfg: SERIES_CONFIG[key as keyof typeof SERIES_CONFIG],
     items: visible.filter(p => p.series === key),
   })).filter(g => g.items.length > 0);
 
@@ -255,7 +239,7 @@ export default function Products() {
               </div>
             ))
           ) : (
-            <ProductGrid items={visible} cfg={SERIES_CFG[activeFamily as keyof typeof SERIES_CFG] ?? SERIES_CFG.haemng} navigate={navigate} />
+            <ProductGrid items={visible} cfg={SERIES_CONFIG[activeFamily as keyof typeof SERIES_CONFIG] ?? SERIES_CONFIG.haemng} navigate={navigate} />
           )}
         </div>
 
@@ -294,7 +278,7 @@ function ProductGrid({
   navigate,
 }: {
   items: Product[];
-  cfg: typeof SERIES_CFG[keyof typeof SERIES_CFG];
+  cfg: typeof SERIES_CONFIG[keyof typeof SERIES_CONFIG];
   navigate: (to: string) => void;
 }) {
   return (

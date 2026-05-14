@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { PRODUCTS, SERIES_CFG, type Product } from "@/data/products";
+import { PRODUCTS } from "@/data/products";
+import { SERIES_CONFIG, Product } from "@/config/products.config";
 
 const TABS = [
   { id: "all", label: "All Products", count: PRODUCTS.length },
@@ -15,7 +16,7 @@ function ProductCard({ p, expanded, onToggle }: {
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const cfg = SERIES_CFG[p.series];
+  const cfg = SERIES_CONFIG[p.series];
 
   return (
     <div className={`flex flex-col h-full border transition-all duration-300 ${expanded ? "border-gray-300 shadow-xl" : "border-gray-100 hover:border-gray-300 hover:shadow-md"
@@ -242,7 +243,7 @@ export default function ProductsSection() {
 
         {/* Series group labels when "All" */}
         {activeTab === "all" ? (
-          Object.entries(SERIES_CFG).map(([key, cfg]) => {
+          Object.entries(SERIES_CONFIG).map(([key, cfg]) => {
             const group = PRODUCTS.filter(p => p.series === key);
             if (!group.length) return null;
             return (

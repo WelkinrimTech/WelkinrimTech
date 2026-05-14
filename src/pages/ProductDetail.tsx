@@ -1,16 +1,53 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "wouter";
-import { PRODUCTS, SERIES_CFG } from "@/data/products";
+import { PRODUCTS } from "@/data/products";
+import { SERIES_CONFIG, Product, USE_DATABASE } from "@/config/products.config";
+import { fetchProductById, fetchProducts } from "@/lib/supabase";
 import Footer from "@/components/Footer";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-
-
 
 export default function ProductDetail() {
   const params = useParams<{ id: string }>();
   const [, navigate] = useLocation();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [siblings, setSiblings] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const product = PRODUCTS.find(p => p.id === params.id);
+  // Fetch product from database or use static data
+  useEffect(() => {
+    const loadProduct = async () => {
+      if (USE_DATABASE) {
+        // Try fetching from Supabase
+        const dbProduct = await fetchProductById(params.id);
+        if (dbProduct) {
+          setProduct(dbProduct);
+          // Fetch siblings from same series
+          const allProducts = await fetchProducts();
+          if (allProducts) {
+            setSiblings(allProducts.filter(p => p.series === dbProduct.series && p.id !== dbProduct.id).slice(0, 4));
+          }
+          setLoading(false);
+        } else {
+          // Fallback to static data
+          const staticProduct = PRODUCTS.find(p => p.id === params.id);
+          if (staticProduct) {
+            setProduct(staticProduct);
+            setSiblings(PRODUCTS.filter(p => p.series === staticProduct.series && p.id !== staticProduct.id).slice(0, 4));
+          }
+          setLoading(false);
+        }
+      } else {
+        // Use static data directly
+        const staticProduct = PRODUCTS.find(p => p.id === params.id);
+        if (staticProduct) {
+          setProduct(staticProduct);
+          setSiblings(PRODUCTS.filter(p => p.series === staticProduct.series && p.id !== staticProduct.id).slice(0, 4));
+        }
+        setLoading(false);
+      }
+    };
+    loadProduct();
+  }, [params.id]);
 
   const handleEnquire = () => {
     navigate("/");
@@ -20,6 +57,14 @@ export default function ProductDetail() {
   };
 
   useEffect(() => { window.scrollTo(0, 0); }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <p className="text-[#808080] text-sm" style={{ fontFamily: "Michroma, sans-serif" }}>Loading product...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -38,8 +83,7 @@ export default function ProductDetail() {
     );
   }
 
-  const cfg = SERIES_CFG[product.series as keyof typeof SERIES_CFG] || SERIES_CFG.other;
-  const siblings = PRODUCTS.filter(p => p.series === product.series && p.id !== product.id).slice(0, 4);
+  const cfg = SERIES_CONFIG[product.series] || SERIES_CONFIG.other;
 
   /* ── series logo path (data-driven for future admin use) ── */
   const seriesLogoSrc =
