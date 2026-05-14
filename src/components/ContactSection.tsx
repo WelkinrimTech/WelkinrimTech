@@ -1,9 +1,19 @@
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 const industries = ["UAV/eVTOL", "Marine", "Land", "Robotics", "Multiple"];
 
+interface EnquiryFormData {
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  industry: string;
+  message: string;
+}
+
 export default function ContactSection() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<EnquiryFormData>({
     name: "",
     company: "",
     email: "",
@@ -13,17 +23,61 @@ export default function ContactSection() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
+    setError(null);
+
+    try {
+      // Save enquiry to Supabase database
+      const { error: dbError } = await supabase
+        .from('enquiries')
+        .insert({
+          name: form.name,
+          company: form.company || null,
+          email: form.email,
+          phone: form.phone || null,
+          industry: form.industry || null,
+          message: form.message,
+          status: 'new',
+        });
+
+      if (dbError) {
+        console.error('Error saving enquiry:', dbError);
+        setError('Failed to submit. Please try again or email us directly at connect@welkinrim.com');
+        setLoading(false);
+        return;
+      }
+
+      // Send email notification via Edge Function (optional)
+      try {
+        await supabase.functions.invoke('send-enquiry-notification', {
+          body: {
+            name: form.name,
+            email: form.email,
+            company: form.company,
+            message: form.message,
+          }
+        });
+      } catch (emailErr) {
+        // Email notification failure is non-critical - enquiry is already saved
+        console.warn('Email notification failed (non-critical):', emailErr);
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('Something went wrong. Please try again.');
+    }
+
     setLoading(false);
-    setSubmitted(true);
   };
 
   return (
@@ -211,6 +265,13 @@ export default function ContactSection() {
                     style={{ fontFamily: 'Lexend, sans-serif', transform: 'skewX(-10deg)' }}
                   />
                 </div>
+
+                {/* Error message */}
+                {error && (
+                  <div className="sm:col-span-2 p-3 border border-red-500/30 bg-red-500/10 text-red-400 text-sm" style={{ fontFamily: 'Lexend, sans-serif' }}>
+                    {error}
+                  </div>
+                )}
 
                 {/* Submit */}
                 <div className="sm:col-span-2">
