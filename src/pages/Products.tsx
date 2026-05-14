@@ -53,8 +53,8 @@ export default function Products() {
     }, 100);
   };
 
-  // Generate family tabs
-  const FAMILIES = [
+  // Generate family tabs - only show families with products
+  const allFamilies = [
     { id: "all", label: "All", count: products.length },
     { id: "haemng", label: "HAEMNG", count: products.filter(p => p.series === "haemng").length },
     { id: "maelard", label: "MAELARD", count: products.filter(p => p.series === "maelard").length },
@@ -66,6 +66,7 @@ export default function Products() {
     { id: "fc", label: "Auto Pilot", count: products.filter(p => p.series === "fc").length },
     { id: "other", label: "Other", count: products.filter(p => p.series === "other").length },
   ];
+  const FAMILIES = allFamilies.filter(f => f.id === "all" || f.count > 0);
 
   // Extract unique voltages from products
   const VOLTAGES = [

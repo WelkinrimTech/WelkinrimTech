@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { PRODUCTS } from "@/data/products";
 import { useRef, useEffect, useCallback } from "react";
 
-const FAMILIES = [
+const ALL_FAMILIES = [
   { id: "haemng", name: "HÆMNG", series: "haemng", num: "01", image: "/welkinrim-motor.png" },
   { id: "maelard", name: "MÆLARD", series: "maelard", num: "02", image: "/welkinrim-motor.png" },
   { id: "stroke", name: "STROKE", series: "stroke", num: "03", image: "/motor-hero.png" },
@@ -12,6 +12,9 @@ const FAMILIES = [
   { id: "ips", name: "IPS", series: "ips", num: "07", image: "/welkinrim-motor.png" },
   { id: "fc", name: "AUTO PILOT", series: "fc", num: "08", image: "/hero-uav-bg.jpeg" },
 ];
+
+// Filter families with at least one product
+const FAMILIES = ALL_FAMILIES.filter(f => PRODUCTS.some(p => p.series === f.series));
 
 const CARD_W = 360;
 const CARD_GAP = 24;
