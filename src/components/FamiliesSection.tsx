@@ -1,32 +1,41 @@
 import { Link } from "wouter";
 import { PRODUCTS } from "@/data/products";
-import { useRef, useEffect, useCallback } from "react";
+import { Product, USE_DATABASE } from "@/config/products.config";
+import { fetchProducts } from "@/lib/supabase";
+import { useRef, useEffect, useCallback, useState } from "react";
 
 const ALL_FAMILIES = [
-  { id: "haemng", name: "HÆMNG", series: "haemng", num: "01", image: "/welkinrim-motor.png" },
-  { id: "maelard", name: "MÆLARD", series: "maelard", num: "02", image: "/welkinrim-motor.png" },
-  { id: "stroke", name: "STROKE", series: "stroke", num: "03", image: "/motor-hero.png" },
-  { id: "vagans", name: "VAGANS", series: "vagans", num: "04", image: "/motor-hero.png" },
-  { id: "sciatic", name: "SCIATIC", series: "sciatic", num: "05", image: "/welkinrim-motor.png" },
-  { id: "esc", name: "ESC", series: "esc", num: "06", image: "/motor-hero.png" },
-  { id: "ips", name: "IPS", series: "ips", num: "07", image: "/welkinrim-motor.png" },
-  { id: "fc", name: "AUTO PILOT", series: "fc", num: "08", image: "/hero-uav-bg.jpeg" },
+  { id: "haemng", name: "HÆMNG", series: "haemng", num: "01", image: "/assets/families/haemng.png" },
+  { id: "maelard", name: "MÆLARD", series: "maelard", num: "02", image: "/assets/families/maelard.png" },
+  { id: "stroke", name: "STOAEK", series: "stroke", num: "03", image: "/assets/families/stroke.png" },
+  { id: "vagans", name: "VAEGAN", series: "vagans", num: "04", image: "/assets/families/vagans.png" },
+  { id: "sciatic", name: "SCIAETIC", series: "sciatic", num: "05", image: "/assets/families/sciatic.png" },
+  { id: "esc", name: "ESC", series: "esc", num: "06", image: "/assets/families/esc.png" },
+  { id: "ips", name: "IPS", series: "ips", num: "07", image: "/assets/families/ips.png" },
+  { id: "fc", name: "AUTO PILOT", series: "fc", num: "08", image: "/assets/families/auto-pilot.png" },
 ];
 
-// Filter families with at least one product
-const FAMILIES = ALL_FAMILIES.filter(f => PRODUCTS.some(p => p.series === f.series));
+// Show every family card (some series have no products yet)
+const FAMILIES = ALL_FAMILIES;
 
 const CARD_W = 360;
 const CARD_GAP = 24;
 const SPEED = 1.2; // px per frame at 60fps
 
 export default function FamiliesSection() {
-  const totalModels = PRODUCTS.length;
-  const getVariantCount = (series: string) => PRODUCTS.filter(p => p.series === series).length;
+  // Mirror the Products page: count variants from the live DB, falling back to static data.
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  useEffect(() => {
+    if (!USE_DATABASE) return;
+    fetchProducts().then((db) => {
+      if (db && db.length > 0) setProducts(db);
+    });
+  }, []);
+
+  const totalModels = products.length;
+  const getVariantCount = (series: string) => products.filter(p => p.series === series).length;
 
   const getFamilyImage = (family: typeof FAMILIES[0]) => {
-    const productWithImage = PRODUCTS.find(p => p.series === family.series && p.thumbnailUrl);
-    if (productWithImage?.thumbnailUrl) return productWithImage.thumbnailUrl;
     return import.meta.env.BASE_URL + family.image.replace(/^\//, "");
   };
 

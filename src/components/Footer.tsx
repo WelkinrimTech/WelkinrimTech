@@ -6,14 +6,59 @@ const navLinks = [
   { label: "Products", href: "#products" },
   { label: "About", href: "/about", isRoute: true },
   { label: "Contact", href: "#contact" },
+  { label: "Updates", href: "https://welkinrim-updates-website.vercel.app/", external: true },
 ];
 
 const industries = ["UAV/eVTOL", "Marine", "Land", "Robotics"];
 
+const socials = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/welkinrimtechnologies/posts/?feedView=all",
+    icon: (
+      <>
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+        <rect x="2" y="9" width="4" height="12"></rect>
+        <circle cx="4" cy="4" r="2"></circle>
+      </>
+    ),
+  },
+  {
+    label: "YouTube",
+    href: "https://youtube.com/@welkinrimtechnologies",
+    icon: (
+      <>
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+      </>
+    ),
+  },
+  {
+    label: "X",
+    href: "https://x.com/WelkinrimTech",
+    icon: (
+      <path fill="currentColor" stroke="none" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.61l-5.18-6.77-5.925 6.77H1.803l7.73-8.835L1.374 2.25h6.777l4.68 6.185 5.413-6.185zm-1.16 17.52h1.833L7.084 4.126H5.117l11.967 15.644z"></path>
+    ),
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/welkinrimtech/",
+    icon: (
+      <>
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+      </>
+    ),
+  },
+];
+
 export default function Footer() {
   const [, navigate] = useLocation();
   const handleNav = (link: typeof navLinks[number]) => {
-    if (link.isRoute) {
+    if ("external" in link && link.external) {
+      window.open(link.href, "_blank", "noopener,noreferrer");
+    } else if ("isRoute" in link && link.isRoute) {
       navigate(link.href);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -39,28 +84,29 @@ export default function Footer() {
             Pioneering the future of electric propulsion for UAV, Marine, Land and Robotics applications.
           </p>
           <div className="flex gap-3">
-            <a
-              href="https://www.linkedin.com/company/welkinrimtechnologies/posts/?feedView=all"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-8 h-8 border border-white/10 hover:border-[#ffc812] hover:text-[#ffc812] flex items-center justify-center text-white/50 transition-all duration-200 group"
-            >
-              <svg 
-                width="14" 
-                height="14" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-                className="group-hover:stroke-[#ffc812]"
+            {socials.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                className="w-8 h-8 border border-white/10 hover:border-[#ffc812] hover:text-[#ffc812] flex items-center justify-center text-white/50 transition-all duration-200 group"
               >
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
-              </svg>
-            </a>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {social.icon}
+                </svg>
+              </a>
+            ))}
           </div>
         </div>
 

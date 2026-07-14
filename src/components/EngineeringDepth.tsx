@@ -6,6 +6,7 @@ const industries = [
     label: "UAV/EVTOL",
     tabLabel: "UAV/EVTOL",
     fullLabel: "UAV/eVTOL",
+    image: "/assets/engineering/uav-evtol.png",
     testedStatus: "JSS 55555 and MIL STD 810 G Tested",
     metrics: [
       { label: "POWER",          display: "100W to 30kW" },
@@ -21,6 +22,7 @@ const industries = [
     label: "MARINE",
     tabLabel: "MARINE",
     fullLabel: "Marine",
+    image: "/assets/engineering/marine.png",
     testedStatus: "JSS 55555 and MIL STD 810 G to be Tested",
     metrics: [
       { label: "POWER",          display: "100W to 2.5kW" },
@@ -36,6 +38,7 @@ const industries = [
     label: "LAND",
     tabLabel: "LAND",
     fullLabel: "Land Vehicles",
+    image: "/assets/engineering/land.png",
     testedStatus: "JSS 55555 and MIL STD 810 G to be Tested",
     metrics: [
       { label: "POWER",          display: "50W to 15kW" },
@@ -51,6 +54,7 @@ const industries = [
     label: "ROBOTICS",
     tabLabel: "ROBOTICS",
     fullLabel: "Robotics",
+    image: "/assets/engineering/robotics.png",
     testedStatus: "JSS 55555 and MIL STD 810 G to be Tested",
     metrics: [
       { label: "POWER",          display: "100W to 30kW" },
@@ -227,7 +231,7 @@ export default function EngineeringDepth() {
 
             <img loading="lazy" decoding="async"
               key={activeIdx}
-              src={`${import.meta.env.BASE_URL}motor-hero.png`}
+              src={`${import.meta.env.BASE_URL}${active.image.replace(/^\//, "")}`}
               alt={active.fullLabel}
               className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 opacity-60 hover:opacity-75"
             />

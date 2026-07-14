@@ -5,7 +5,7 @@ const industries = [
   {
     id: "uav",
     label: "UAV",
-    bg: "/motor-hero.png",
+    bg: "/assets/products/hero-uav.png",
     accent: "Autonomous Aerial Systems",
     pos: "right center",
     fit: "contain",
@@ -13,7 +13,7 @@ const industries = [
   {
     id: "marine",
     label: "Marine",
-    bg: "/assets/products/maelard_1560.png",
+    bg: "/assets/products/hero-marine.png",
     accent: "Maritime Electric Drives",
     pos: "right center",
     fit: "contain",
@@ -21,7 +21,7 @@ const industries = [
   {
     id: "land",
     label: "Land",
-    bg: "/assets/products/maelard_9007.png",
+    bg: "/assets/products/hero-land.png",
     accent: "Ground Vehicle Propulsion",
     pos: "right center",
     fit: "contain",
@@ -29,7 +29,7 @@ const industries = [
   {
     id: "robotics",
     label: "Robotics",
-    bg: "/assets/products/haemng_1536.png",
+    bg: "/assets/products/hero-robotics.png",
     accent: "Industrial Automation",
     pos: "right center",
     fit: "contain",

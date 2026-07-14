@@ -6,7 +6,7 @@ const TIMELINE_NODES = [
   { id: "01", day: "DAY 0", title: "PO Received", desc: "Order intake and spec lockdown", pos: "on-line", left: 40, icon: Box },
   // WT ENGINE is special, left: 280
   { id: "02", day: "DAY 1", title: "PI Raised", desc: "Performa invoice issued to client", pos: "bottom", left: 540, icon: FileText },
-  { id: "03", day: "DAY 2 - 9", title: "Manufacturing", desc: "Stator, rotor and PCG fabrication", pos: "top", left: 740, icon: Settings },
+  { id: "03", day: "DAY 2 - 9", title: "Manufacturing", desc: "Stator, rotor and PCB fabrication", pos: "top", left: 740, icon: Settings },
   { id: "04", day: "DAY 10 - 11", title: "Assembly", desc: "Rotor, stator and ESC mating", pos: "bottom", left: 940, icon: Wrench },
   { id: "05", day: "DAY 12 - 13", title: "Testing QC", desc: "End-of-line, IR and BEMF testing", pos: "top", left: 1140, icon: CheckCircle2 },
   { id: "06", day: "DAY 13", title: "Invoice Raised", desc: "Final invoice and documentation", pos: "bottom", left: 1340, icon: FileText },
