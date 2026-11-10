@@ -13,6 +13,9 @@ import {
 } from "@/config/products.config";
 
 /** Monochrome icon from a logo file: the logo's shape filled with the current text colour. */
+/** News and announcements site (same link as the footer's "Updates"). */
+const UPDATES_URL = "https://welkinrim-updates-website.vercel.app/";
+
 function MaskIcon({ src }: { src: string }) {
   const url = `url("${src}")`;
   return (
@@ -267,6 +270,12 @@ export default function Navbar() {
     goToHomeSection(navigate, id);
   };
 
+  const openUpdates = () => {
+    setMenuOpen(false);
+    setMegaOpen(false);
+    window.open(UPDATES_URL, "_blank", "noopener,noreferrer");
+  };
+
   const goToProducts = (categoryId?: string) => {
     setMenuOpen(false);
     setMegaOpen(false);
@@ -327,6 +336,7 @@ export default function Navbar() {
               { label: "Home", action: () => scrollToSection("home") },
               { label: "About", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/about"); } },
               { label: "Calculators", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/calculators"); } },
+              { label: "Updates", action: openUpdates },
             ].map(({ label, action }) => (
               <button
                 key={label}
@@ -384,6 +394,8 @@ export default function Navbar() {
           <button
             className={`md:hidden flex flex-col gap-1.5 transition-colors duration-300 ml-4 p-2 -mr-2 ${useLightText ? "text-white" : "text-white"}`}
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
           >
             <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
             <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
@@ -399,6 +411,7 @@ export default function Navbar() {
               { label: "Products", action: () => goToProducts() },
               { label: "Calculators", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/calculators"); } },
               { label: "About", action: () => { setMenuOpen(false); setMegaOpen(false); navigate("/about"); } },
+              { label: "Updates", action: openUpdates },
             ].map(({ label, action }) => (
               <button
                 key={label}
