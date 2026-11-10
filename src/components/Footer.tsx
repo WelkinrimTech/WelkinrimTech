@@ -1,9 +1,10 @@
 import { useLocation } from "wouter";
+import { goToHomeSection } from "@/lib/scrollTo";
 
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Technology", href: "#technology" },
-  { label: "Products", href: "#products" },
+  { label: "Technology", href: "#depth" },
+  { label: "Products", href: "/products", isRoute: true },
   { label: "About", href: "/about", isRoute: true },
   { label: "Contact", href: "#contact" },
   { label: "Updates", href: "https://welkinrim-updates-website.vercel.app/", external: true },
@@ -62,8 +63,8 @@ export default function Footer() {
       navigate(link.href);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      const el = document.querySelector(link.href);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      // Works from any page: returns to Home first, then scrolls to the section.
+      goToHomeSection(navigate, link.href.slice(1));
     }
   };
 

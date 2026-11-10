@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useLocation } from "wouter";
 
 const industries = [
   {
@@ -37,7 +36,6 @@ const industries = [
 ];
 
 export default function HeroSection() {
-  const [, setLocation] = useLocation();
   const [activeIdx, setActiveIdx] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -197,8 +195,7 @@ export default function HeroSection() {
           </button>
           <button
             onClick={() => {
-              setLocation("/about");
-              window.scrollTo(0, 0);
+              document.getElementById("depth")?.scrollIntoView({ behavior: "smooth", block: "start" });
             }}
             className="px-6 md:px-8 py-2.5 md:py-3 border border-white/50 text-white text-[10px] md:text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 backdrop-blur-sm hover:border-[#ffc812] hover:text-[#ffc812]"
             style={{ fontFamily: 'Michroma, sans-serif', transform: 'skewX(-10deg)' }}
