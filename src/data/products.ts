@@ -207,7 +207,7 @@ export const PRODUCTS: Product[] = [
     id: "haemng-6k4icwbgs",
     series: "haemng", seriesLabel: "Haemng Series",
     model: "HAEMNG 8005", name: "HAEMNG 8005", tag: "HAEMNG", application: "UAV / eVTOL",
-    thumbnailUrl: "/assets/products/haemng_8005.png",
+    thumbnailUrl: "/assets/products/haemng_8005.webp",
     keySpecs: [ { "label": "KV Rating", "value": "230"  }, { "label": "Peak Thrust", "value": "1,500 g"  }, { "label": "Voltage", "value": "6S"  }
 ],
     allSpecs: [
@@ -264,7 +264,7 @@ export const PRODUCTS: Product[] = [
     id: "haemng-79588b9hf",
     series: "haemng", seriesLabel: "Haemng Series",
     model: "HAEMNG 7010", name: "HAEMNG 7010", tag: "HAEMNG", application: "UAV / eVTOL",
-    thumbnailUrl: "/assets/products/haemng_7010.png",
+    thumbnailUrl: "/assets/products/haemng_7010.webp",
     keySpecs: [ { "label": "KV Rating", "value": "150" }, { "label": "Peak Thrust", "value": "13 kg" }, { "label": "Voltage", "value": "12S" } ],
     allSpecs: [
       { "label": "KV Rating",               "value": "150" },
@@ -296,7 +296,7 @@ export const PRODUCTS: Product[] = [
     id: "haemng-ixtod385i",
     series: "haemng", seriesLabel: "Haemng Series",
     model: "HAEMNG 1536", name: "HAEMNG 1536", tag: "HAEMNG", application: "UAV / eVTOL",
-    thumbnailUrl: "/assets/products/haemng_1536.png",
+    thumbnailUrl: "/assets/products/haemng_1536.webp",
     keySpecs: [ { "label": "KV Rating", "value": "80" }, { "label": "Peak Thrust", "value": "44 kg" }, { "label": "Voltage", "value": "24S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "80" },
@@ -359,7 +359,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-a4w2jf3t2",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 1026", name: "MAELARD 1026", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_1026.png",
+    thumbnailUrl: "/assets/products/maelard_1026.webp",
     keySpecs: [ { "label": "KV Rating", "value": "100" }, { "label": "Peak Thrust", "value": "35 kg" }, { "label": "Voltage", "value": "14S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "100" },
@@ -391,7 +391,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-vnu49pfqo",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 1026", name: "MAELARD 1026", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_1026.png",
+    thumbnailUrl: "/assets/products/maelard_1026.webp",
     keySpecs: [ { "label": "KV Rating", "value": "100" }, { "label": "Peak Thrust", "value": "31 kg" }, { "label": "Voltage", "value": "12S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "100" },
@@ -423,7 +423,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-wkapubmc7",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 1240", name: "MAELARD 1240", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_1240.png",
+    thumbnailUrl: "/assets/products/maelard_1240.webp",
     keySpecs: [ { "label": "KV Rating", "value": "60" }, { "label": "Peak Thrust", "value": "43 kg" }, { "label": "Voltage", "value": "12S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "60" },
@@ -1526,7 +1526,7 @@ export const PRODUCTS: Product[] = [
     id: "haemng-8808v1",
     series: "haemng", seriesLabel: "Haemng Series",
     model: "HAEMNG 8808", name: "HAEMNG 8808", tag: "HAEMNG", application: "UAV / eVTOL",
-    thumbnailUrl: "/assets/products/haemng_8808.png",
+    thumbnailUrl: "/assets/products/haemng_8808.webp",
     keySpecs: [ { "label": "KV Rating", "value": "160" }, { "label": "Peak Thrust", "value": "5 kg" }, { "label": "Voltage", "value": "6S – 12S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "160" },
@@ -1559,7 +1559,7 @@ export const PRODUCTS: Product[] = [
     id: "haemng-8808v2",
     series: "haemng", seriesLabel: "Haemng Series",
     model: "HAEMNG 8808", name: "HAEMNG 8808", tag: "HAEMNG", application: "UAV / eVTOL",
-    thumbnailUrl: "/assets/products/haemng_8808.png",
+    thumbnailUrl: "/assets/products/haemng_8808.webp",
     keySpecs: [ { "label": "KV Rating", "value": "160" }, { "label": "Peak Thrust", "value": "6 kg" }, { "label": "Voltage", "value": "6S – 12S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "160" },
@@ -1592,7 +1592,7 @@ export const PRODUCTS: Product[] = [
     id: "haemng-8808v3",
     series: "haemng", seriesLabel: "Haemng Series",
     model: "HAEMNG 8808", name: "HAEMNG 8808", tag: "HAEMNG", application: "UAV / eVTOL",
-    thumbnailUrl: "/assets/products/haemng_8808.png",
+    thumbnailUrl: "/assets/products/haemng_8808.webp",
     keySpecs: [ { "label": "KV Rating", "value": "130" }, { "label": "Peak Thrust", "value": "11 kg" }, { "label": "Voltage", "value": "12S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "130" },
@@ -1753,7 +1753,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-1560v1",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 1560", name: "MAELARD 1560", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_1560.png",
+    thumbnailUrl: "/assets/products/maelard_1560.webp",
     keySpecs: [ { "label": "KV Rating", "value": "36" }, { "label": "Peak Thrust", "value": "68 kg" }, { "label": "Voltage", "value": "14S – 28S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "36" },
@@ -1786,7 +1786,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-1560v2",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 1560", name: "MAELARD 1560", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_1560.png",
+    thumbnailUrl: "/assets/products/maelard_1560.webp",
     keySpecs: [ { "label": "KV Rating", "value": "36" }, { "label": "Peak Thrust", "value": "73 kg" }, { "label": "Voltage", "value": "14S – 28S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "36" },
@@ -1819,7 +1819,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-1780",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 1780", name: "MAELARD 1780", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_1780.png",
+    thumbnailUrl: "/assets/products/maelard_1780.webp",
     keySpecs: [ { "label": "KV Rating", "value": "48" }, { "label": "Peak Thrust", "value": "79 kg" }, { "label": "Voltage", "value": "14S – 28S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "48" },
@@ -1852,7 +1852,7 @@ export const PRODUCTS: Product[] = [
     id: "maelard-9007",
     series: "maelard", seriesLabel: "Maelard Series",
     model: "MAELARD 9007", name: "MAELARD 9007", tag: "MAELARD", application: "Multi-Mission",
-    thumbnailUrl: "/assets/products/maelard_9007.png",
+    thumbnailUrl: "/assets/products/maelard_9007.webp",
     keySpecs: [ { "label": "KV Rating", "value": "200" }, { "label": "Peak Thrust", "value": "35 kg" }, { "label": "Voltage", "value": "12S" } ],
     allSpecs: [
       { "label": "KV Rating",             "value": "200" },

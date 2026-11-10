@@ -1,8 +1,21 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { SERIES_CONFIG, Product, USE_DATABASE } from "@/config/products.config";
+import { Product, SERIES_CONFIG, SeriesInfo, USE_DATABASE, seriesLogoFor } from "@/config/products.config";
 import { PRODUCTS } from "@/data/products";
-import { fetchProducts } from "@/lib/supabase";
+import { fetchCatalog } from "@/lib/supabase";
+import { goToHomeSection } from "@/lib/scrollTo";
+
+const ACCENT = "#ffc812";
+
+/** Series used when the catalogue cannot be loaded (static product fallback). */
+const FALLBACK_SERIES: SeriesInfo[] = Object.entries(SERIES_CONFIG).map(([id, c]) => ({
+  id,
+  label: c.label,
+  menuLabel: c.menuLabel,
+  tagline: c.tagline,
+  accent: c.accent,
+  logoUrl: seriesLogoFor(id),
+}));
 import Footer from "@/components/Footer";
 
 // Hook to get current hash and subscribe to hash changes
@@ -23,48 +36,37 @@ export default function Products() {
   const hash = useHash();
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
+  const [series, setSeries] = useState<SeriesInfo[]>(FALLBACK_SERIES);
   const [loading, setLoading] = useState(true);
   const [activeVoltage, setActiveVoltage] = useState("all");
 
   // Fetch products from database or use static data
   useEffect(() => {
+    let cancelled = false;
     const loadProducts = async () => {
-      if (USE_DATABASE) {
-        const dbProducts = await fetchProducts();
-        if (dbProducts && dbProducts.length > 0) {
-          setProducts(dbProducts);
-          setLoading(false);
-        } else {
-          setProducts(PRODUCTS);
-          setLoading(false);
-        }
+      const catalog = USE_DATABASE ? await fetchCatalog() : null;
+      if (cancelled) return;
+      if (catalog) {
+        setProducts(catalog.products);
+        setSeries(catalog.series);
       } else {
         setProducts(PRODUCTS);
-        setLoading(false);
       }
+      setLoading(false);
     };
     loadProducts();
+    return () => { cancelled = true; };
   }, []);
 
   const handleEnquire = () => {
-    navigate("/");
-    setTimeout(() => {
-      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+    goToHomeSection(navigate, "contact");
   };
 
   // Generate family tabs - only show families with products
+  // Family tabs come from the live series table, so new lines appear automatically.
   const allFamilies = [
     { id: "all", label: "All", count: products.length },
-    { id: "haemng", label: "HAEMNG", count: products.filter(p => p.series === "haemng").length },
-    { id: "maelard", label: "MAELARD", count: products.filter(p => p.series === "maelard").length },
-    { id: "stroke", label: "STROKE", count: products.filter(p => p.series === "stroke").length },
-    { id: "vagans", label: "VAGANS", count: products.filter(p => p.series === "vagans").length },
-    { id: "sciatic", label: "SCIATIC", count: products.filter(p => p.series === "sciatic").length },
-    { id: "esc", label: "ESC", count: products.filter(p => p.series === "esc").length },
-    { id: "ips", label: "IPS", count: products.filter(p => p.series === "ips").length },
-    { id: "fc", label: "Auto Pilot", count: products.filter(p => p.series === "fc").length },
-    { id: "other", label: "Other", count: products.filter(p => p.series === "other").length },
+    ...series.map((s) => ({ id: s.id, label: s.menuLabel, count: products.filter((p) => p.series === s.id).length })),
   ];
   const FAMILIES = allFamilies.filter(f => f.id === "all" || f.count > 0);
 
@@ -95,11 +97,10 @@ export default function Products() {
     return matchFamily && matchVoltage && matchSearch;
   });
 
-  const grouped = Object.keys(SERIES_CONFIG).map(key => ({
-    key,
-    cfg: SERIES_CONFIG[key as keyof typeof SERIES_CONFIG],
-    items: visible.filter(p => p.series === key),
-  })).filter(g => g.items.length > 0);
+  const grouped = series
+    .map((s) => ({ key: s.id, info: s, items: visible.filter((p) => p.series === s.id) }))
+    .filter((g) => g.items.length > 0);
+  const seriesById = new Map(series.map((s) => [s.id, s]));
 
   return (
     <>
@@ -216,31 +217,32 @@ export default function Products() {
               </p>
             </div>
           ) : activeFamily === "all" ? (
-            grouped.map(({ key, cfg, items }) => (
+            grouped.map(({ key, info, items }) => (
               <div key={key} className="mb-10 md:mb-16">
                 <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-7">
-                  <div className="w-1 h-6 md:h-8 flex-shrink-0" style={{ background: cfg.accent }} />
+                  <div className="w-1 h-6 md:h-8 flex-shrink-0" style={{ background: ACCENT }} />
                   <div>
-                    {'useSvgLogo' in cfg && cfg.useSvgLogo ? (
+                    {info.logoUrl ? (
                       <img loading="lazy" decoding="async"
-                        src={`${import.meta.env.BASE_URL}${(cfg as { logoSrc: string }).logoSrc}`}
-                        alt={cfg.label}
-                        className="h-6 md:h-8 w-auto brightness-0 invert"
+                        src={info.logoUrl}
+                        alt={info.label}
+                        title={info.label}
+                        className="h-6 md:h-8 w-auto max-w-[220px] object-contain"
                       />
                     ) : (
                       <h2 className="text-lg md:text-xl font-bold text-white" style={{ fontFamily: "Michroma, sans-serif" }}>
-                        {cfg.label}
+                        {info.label}
                       </h2>
                     )}
                     <p className="text-[9px] md:text-[10px] text-white/40 mt-0.5">{items.length} model{items.length > 1 ? "s" : ""}</p>
                   </div>
                   <div className="flex-1 h-px bg-white/5" />
                 </div>
-                <ProductGrid items={items} cfg={cfg} navigate={navigate} />
+                <ProductGrid items={items} seriesById={seriesById} navigate={navigate} />
               </div>
             ))
           ) : (
-            <ProductGrid items={visible} cfg={SERIES_CONFIG[activeFamily as keyof typeof SERIES_CONFIG] ?? SERIES_CONFIG.haemng} navigate={navigate} />
+            <ProductGrid items={visible} seriesById={seriesById} navigate={navigate} />
           )}
         </div>
 
@@ -275,11 +277,11 @@ export default function Products() {
 /* ─── Product Card ────────────────────────────────────────────────────────── */
 function ProductGrid({
   items,
-  cfg,
+  seriesById,
   navigate,
 }: {
   items: Product[];
-  cfg: typeof SERIES_CONFIG[keyof typeof SERIES_CONFIG];
+  seriesById: Map<string, SeriesInfo>;
   navigate: (to: string) => void;
 }) {
   return (
@@ -298,30 +300,28 @@ function ProductGrid({
             <div
               className="absolute inset-0 opacity-[0.03]"
               style={{
-                backgroundImage: `linear-gradient(${cfg.accent}44 1px, transparent 1px),
-                                  linear-gradient(90deg, ${cfg.accent}44 1px, transparent 1px)`,
+                backgroundImage: `linear-gradient(${ACCENT}44 1px, transparent 1px),
+                                  linear-gradient(90deg, ${ACCENT}44 1px, transparent 1px)`,
                 backgroundSize: "20px 20px",
               }}
             />
-            {(p.series === "haemng" || p.series === "maelard") ? (
-              p.thumbnailUrl ? (
-                <div className="relative z-10 w-full h-full flex items-center justify-center p-4">
-                  <img loading="lazy" decoding="async"
-                    src={p.thumbnailUrl}
-                    alt={p.model}
-                    className="max-w-full max-h-full object-contain"
-                    style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))" }}
-                  />
-                </div>
-              ) : (
-                <div className="relative z-10">
-                  {p.series === "haemng" ? (
-                    <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}haemng.svg`} alt="Haemng" className="h-10 md:h-14 w-auto brightness-0 invert opacity-60" />
-                  ) : (
-                    <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}Maelard.svg`} alt="Maelard" className="h-8 md:h-10 w-auto brightness-0 invert opacity-60" />
-                  )}
-                </div>
-              )
+            {p.thumbnailUrl ? (
+              <div className="relative z-10 w-full h-full flex items-center justify-center p-4">
+                <img loading="lazy" decoding="async"
+                  src={p.thumbnailUrl}
+                  alt={p.model}
+                  className="max-w-full max-h-full object-contain"
+                  style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))" }}
+                />
+              </div>
+            ) : seriesById.get(p.series)?.logoUrl ? (
+              <div className="relative z-10">
+                <img loading="lazy" decoding="async"
+                  src={seriesById.get(p.series)!.logoUrl!}
+                  alt={seriesById.get(p.series)!.label}
+                  className="h-10 md:h-14 w-auto max-w-[70%] mx-auto object-contain opacity-70"
+                />
+              </div>
             ) : (
               <div className="relative z-10">
                 <img loading="lazy" decoding="async"
@@ -351,7 +351,7 @@ function ProductGrid({
               {p.application}
             </p>
             <h3 className="text-sm font-bold mb-3 uppercase" style={{ fontFamily: "Michroma, sans-serif" }}>
-              <span style={{ color: cfg.accent }}>{p.model.split(' ')[0]}</span>
+              <span style={{ color: ACCENT }}>{p.model.split(' ')[0]}</span>
               <span className="text-white"> {p.model.split(' ').slice(1).join(' ')}</span>
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-white/5 mt-auto">

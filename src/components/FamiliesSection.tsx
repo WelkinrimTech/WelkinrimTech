@@ -5,14 +5,14 @@ import { fetchProducts } from "@/lib/supabase";
 import { useRef, useEffect, useCallback, useState } from "react";
 
 const ALL_FAMILIES = [
-  { id: "haemng", name: "HÆMNG", series: "haemng", num: "01", image: "/assets/families/haemng.png" },
-  { id: "maelard", name: "MÆLARD", series: "maelard", num: "02", image: "/assets/families/maelard.png" },
-  { id: "stroke", name: "STOAEK", series: "stroke", num: "03", image: "/assets/families/stroke.png" },
-  { id: "vagans", name: "VAEGAN", series: "vagans", num: "04", image: "/assets/families/vagans.png" },
-  { id: "sciatic", name: "SCIAETIC", series: "sciatic", num: "05", image: "/assets/families/sciatic.png" },
-  { id: "esc", name: "ESC", series: "esc", num: "06", image: "/assets/families/esc.png" },
-  { id: "ips", name: "IPS", series: "ips", num: "07", image: "/assets/families/ips.png" },
-  { id: "fc", name: "AUTO PILOT", series: "fc", num: "08", image: "/assets/families/auto-pilot.png" },
+  { id: "haemng", name: "HÆMNG", series: "haemng", num: "01", image: "/assets/families/haemng.webp" },
+  { id: "maelard", name: "MÆLARD", series: "maelard", num: "02", image: "/assets/families/maelard.webp" },
+  { id: "stroke", name: "STOAEK", series: "stroke", num: "03", image: "/assets/families/stroke.webp" },
+  { id: "vagans", name: "VAEGAN", series: "vagans", num: "04", image: "/assets/families/vagans.webp" },
+  { id: "sciatic", name: "SCIAETIC", series: "sciatic", num: "05", image: "/assets/families/sciatic.webp" },
+  { id: "esc", name: "ESC", series: "esc", num: "06", image: "/assets/families/esc.webp" },
+  { id: "ips", name: "IPS", series: "ips", num: "07", image: "/assets/families/ips.webp" },
+  { id: "fc", name: "AUTO PILOT", series: "fc", num: "08", image: "/assets/families/auto-pilot.webp" },
 ];
 
 // Show every family card (some series have no products yet)

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "wouter";
 import { PRODUCTS } from "@/data/products";
-import { SERIES_CONFIG, Product, USE_DATABASE } from "@/config/products.config";
-import { fetchProductById, fetchProducts } from "@/lib/supabase";
+import { Product, USE_DATABASE, seriesConfig, seriesLogoFor } from "@/config/products.config";
+import { fetchCatalog } from "@/lib/supabase";
+import { goToHomeSection } from "@/lib/scrollTo";
 import Footer from "@/components/Footer";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 
@@ -12,48 +13,37 @@ export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null);
   const [siblings, setSiblings] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seriesLogo, setSeriesLogo] = useState<string | null>(null);
 
   // Fetch product from database or use static data
   useEffect(() => {
+    let cancelled = false;
+    const useStatic = () => {
+      const staticProduct = PRODUCTS.find(p => p.id === params.id) ?? null;
+      setProduct(staticProduct);
+      setSiblings(staticProduct ? PRODUCTS.filter(p => p.series === staticProduct.series && p.id !== staticProduct.id).slice(0, 4) : []);
+      setSeriesLogo(staticProduct ? seriesLogoFor(staticProduct.series) : null);
+    };
     const loadProduct = async () => {
-      if (USE_DATABASE) {
-        // Try fetching from Supabase
-        const dbProduct = await fetchProductById(params.id);
-        if (dbProduct) {
-          setProduct(dbProduct);
-          // Fetch siblings from same series
-          const allProducts = await fetchProducts();
-          if (allProducts) {
-            setSiblings(allProducts.filter(p => p.series === dbProduct.series && p.id !== dbProduct.id).slice(0, 4));
-          }
-          setLoading(false);
-        } else {
-          // Fallback to static data
-          const staticProduct = PRODUCTS.find(p => p.id === params.id);
-          if (staticProduct) {
-            setProduct(staticProduct);
-            setSiblings(PRODUCTS.filter(p => p.series === staticProduct.series && p.id !== staticProduct.id).slice(0, 4));
-          }
-          setLoading(false);
-        }
+      setLoading(true);
+      const catalog = USE_DATABASE ? await fetchCatalog() : null;
+      if (cancelled) return;
+      const dbProduct = catalog?.products.find(p => p.id === params.id);
+      if (catalog && dbProduct) {
+        setProduct(dbProduct);
+        setSiblings(catalog.products.filter(p => p.series === dbProduct.series && p.id !== dbProduct.id).slice(0, 4));
+        setSeriesLogo(catalog.series.find(s => s.id === dbProduct.series)?.logoUrl ?? seriesLogoFor(dbProduct.series));
       } else {
-        // Use static data directly
-        const staticProduct = PRODUCTS.find(p => p.id === params.id);
-        if (staticProduct) {
-          setProduct(staticProduct);
-          setSiblings(PRODUCTS.filter(p => p.series === staticProduct.series && p.id !== staticProduct.id).slice(0, 4));
-        }
-        setLoading(false);
+        useStatic();
       }
+      setLoading(false);
     };
     loadProduct();
+    return () => { cancelled = true; };
   }, [params.id]);
 
   const handleEnquire = () => {
-    navigate("/");
-    setTimeout(() => {
-      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+    goToHomeSection(navigate, "contact");
   };
 
   useEffect(() => { window.scrollTo(0, 0); }, [params.id]);
@@ -83,17 +73,14 @@ export default function ProductDetail() {
     );
   }
 
-  const cfg = SERIES_CONFIG[product.series] || SERIES_CONFIG.other;
+  const cfg = seriesConfig(product.series);
 
-  /* ── series logo path (data-driven for future admin use) ── */
-  const seriesLogoSrc =
-    product.series === "haemng" ? `${import.meta.env.BASE_URL}haemng.svg`
-    : product.series === "maelard" ? `${import.meta.env.BASE_URL}Maelard.svg`
-    : `${import.meta.env.BASE_URL}favicon.svg`;
+  /* ── series logo: brand asset for known lines, admin-uploaded icon for new ones ── */
+  const seriesLogoSrc = seriesLogo ?? `${import.meta.env.BASE_URL}favicon.svg`;
 
-  /* ── series-level hero image (transparent PNG motor photo for Haemng & Maelard) ── */
-  const seriesHeroImage =
-    (product.series === "haemng" || product.series === "maelard") ? `${import.meta.env.BASE_URL}welkinrim-motor.png`
+  /* ── series-level hero image (transparent motor photo for Haemng & Maelard) ── */
+  const seriesHeroImage = cfg.heroImage
+    ? `${import.meta.env.BASE_URL}${cfg.heroImage}`
     : `${import.meta.env.BASE_URL}favicon.svg`;
 
   /* Final hero image: prefer product-specific thumbnailUrl, then series hero, then wireframe */

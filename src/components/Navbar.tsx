@@ -1,8 +1,62 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { PRODUCTS } from "@/data/products";
-import { fetchProducts } from "@/lib/supabase";
-import type { Product } from "@/config/products.config";
+import { fetchCatalog } from "@/lib/supabase";
+import { goToHomeSection } from "@/lib/scrollTo";
+import {
+  SEGMENTS,
+  SERIES_CONFIG,
+  defaultSegmentsFor,
+  seriesLogoFor,
+  type Product,
+  type SeriesInfo,
+} from "@/config/products.config";
+
+/** Monochrome icon from a logo file: the logo's shape filled with the current text colour. */
+function MaskIcon({ src }: { src: string }) {
+  const url = `url("${src}")`;
+  return (
+    <div
+      className="w-5 h-5 bg-current transition-all"
+      style={{
+        maskImage: url,
+        WebkitMaskImage: url,
+        maskSize: "contain",
+        WebkitMaskSize: "contain",
+        maskRepeat: "no-repeat",
+        WebkitMaskRepeat: "no-repeat",
+        maskPosition: "center",
+        WebkitMaskPosition: "center",
+      }}
+    />
+  );
+}
+
+/** Series used when the catalogue cannot be loaded (static product fallback). */
+const FALLBACK_SERIES: SeriesInfo[] = Object.entries(SERIES_CONFIG).map(([id, c]) => ({
+  id,
+  label: c.label,
+  menuLabel: c.menuLabel,
+  tagline: c.tagline,
+  accent: c.accent,
+  logoUrl: seriesLogoFor(id),
+}));
+
+const productSegments = (p: Product) => p.segments ?? defaultSegmentsFor(p.series);
+
+/** Thumbnail for a product card: its own photo, else the series logo, else the brand mark. */
+function ProductThumb({ product, logoUrl }: { product: Product; logoUrl: string | null }) {
+  if (product.thumbnailUrl) {
+    return (
+      <img loading="lazy" decoding="async" src={product.thumbnailUrl} alt={product.model}
+        className="h-full max-h-12 md:max-h-14 w-auto object-contain" />
+    );
+  }
+  return (
+    <img loading="lazy" decoding="async" src={logoUrl ?? `${import.meta.env.BASE_URL}favicon.svg`} alt=""
+      className="h-5 md:h-7 w-auto max-w-[80%] object-contain opacity-80" />
+  );
+}
 
 // Category configuration with icons - products will be populated dynamically
 const CATEGORY_CONFIG = [
@@ -53,44 +107,21 @@ const CATEGORY_CONFIG = [
     label: "Stroke Series",
     menuLabel: "STROKE",
     tagline: "High-Density Storage & Industrial",
-    icon: (
-      <div
-        className="w-5 h-5 bg-current transition-all"
-        style={{
-          maskImage: "url(/assets/prod_list/stoaek_128.svg)",
-          WebkitMaskImage: "url(/assets/prod_list/stoaek_128.svg)",
-          maskSize: "contain",
-          WebkitMaskSize: "contain",
-          maskRepeat: "no-repeat",
-          WebkitMaskRepeat: "no-repeat",
-          maskPosition: "center",
-          WebkitMaskPosition: "center"
-        }}
-      />
-    ),
+    icon: <MaskIcon src="/assets/series/stoaek_logo.svg" />,
   },
   {
     id: "vagans",
     label: "Vagans Series",
     menuLabel: "VAGANS",
     tagline: "Mobile & Robotic Platforms",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-        <path d="M4 12h16M12 4l8 8-8 8" />
-        <circle cx="12" cy="12" r="9" />
-      </svg>
-    ),
+    icon: <MaskIcon src="/assets/series/vaegan_logo.svg" />,
   },
   {
     id: "sciatic",
     label: "Sciatic Series",
     menuLabel: "SCIATIC",
     tagline: "High-Frequency & Precision Control",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-        <path d="M2 12h4l2-8 4 16 2-8h8" />
-      </svg>
-    ),
+    icon: <MaskIcon src="/assets/series/sciaetic_logo.svg" />,
   },
   {
     id: "esc",
@@ -143,54 +174,54 @@ const CATEGORY_CONFIG = [
   },
 ];
 
-const SEGMENTS = [
-  { id: "uav", label: "UAV" },
-  { id: "marine", label: "Marine" },
-  { id: "land", label: "Land" },
-  { id: "robotics", label: "Robotics" },
-  { id: "other", label: "Other Products" },
-];
+const CATEGORY_ICONS: Record<string, ReactNode> = Object.fromEntries(
+  CATEGORY_CONFIG.map((c) => [c.id, c.icon]),
+);
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(CATEGORY_CONFIG[0].id);
-  const [activeSegment, setActiveSegment] = useState("uav");
+  const [activeCategory, setActiveCategory] = useState("haemng");
+  const [activeSegment, setActiveSegment] = useState<string>("uav");
   const [currentSection, setCurrentSection] = useState("home");
   const [products, setProducts] = useState<Product[]>(PRODUCTS); // Start with static, update with fetched
-  const [productsLoaded, setProductsLoaded] = useState(false);
+  const [series, setSeries] = useState<SeriesInfo[]>(FALLBACK_SERIES);
 
   const [location, navigate] = useLocation();
 
   const isHome = location === "/" || location === "";
   const isAboutPage = location.startsWith("/about");
 
-  // Fetch products from database on mount
+  // Fetch the catalogue (shared, cached) on mount
   useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const dbProducts = await fetchProducts();
-        if (dbProducts && dbProducts.length > 0) {
-          setProducts(dbProducts);
-        }
-      } catch (err) {
-        console.error('Failed to fetch products for navbar:', err);
-        // Keep using static PRODUCTS as fallback
-      }
-      setProductsLoaded(true);
-    };
-    loadProducts();
+    let cancelled = false;
+    fetchCatalog().then((catalog) => {
+      if (cancelled || !catalog) return;
+      setProducts(catalog.products);
+      setSeries(catalog.series);
+    });
+    return () => { cancelled = true; };
   }, []);
 
-  // Build PRODUCT_CATEGORIES dynamically from fetched products
+  // Product lines for the selected application segment, built from the live series table
+  // so lines added in the admin console appear without a code change.
   const PRODUCT_CATEGORIES = useMemo(() => {
-    return CATEGORY_CONFIG.map(cat => ({
-      ...cat,
-      tagline: `${cat.tagline} — ${products.filter(p => p.series === cat.id).length} variants`,
-      products: products.filter(p => p.series === cat.id),
-    })).filter(cat => cat.products.length > 0); // Only show categories with products
-  }, [products]);
+    return series
+      .map((s) => {
+        const items = products.filter((p) => p.series === s.id && productSegments(p).includes(activeSegment));
+        return {
+          id: s.id,
+          label: s.label,
+          menuLabel: s.menuLabel,
+          logoUrl: s.logoUrl,
+          tagline: `${s.tagline} — ${items.length} variants`,
+          icon: CATEGORY_ICONS[s.id] ?? (s.logoUrl ? <MaskIcon src={s.logoUrl} /> : CATEGORY_ICONS.other),
+          products: items,
+        };
+      })
+      .filter((cat) => cat.products.length > 0);
+  }, [series, products, activeSegment]);
 
   // Close menus automatically whenever the route changes
   useEffect(() => {
@@ -233,14 +264,7 @@ export default function Navbar() {
   const scrollToSection = (id: string) => {
     setMenuOpen(false);
     setMegaOpen(false);
-    if (!isHome) {
-      navigate("/");
-      setTimeout(() => {
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      }, 350);
-    } else {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    }
+    goToHomeSection(navigate, id);
   };
 
   const goToProducts = (categoryId?: string) => {
@@ -349,8 +373,8 @@ export default function Navbar() {
             onClick={() => { navigate("/"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
             className="flex items-center gap-2 md:gap-3 ml-auto"
           >
-            <img loading="lazy" decoding="async"
-              src={`${import.meta.env.BASE_URL}welkinrim-logo-white.svg`}
+            <img decoding="async" fetchPriority="high"
+              src={`${import.meta.env.BASE_URL}wt-logo-white.svg`}
               alt="Welkinrim Technologies"
               className="h-8 md:h-10 lg:h-12 w-auto transition-opacity duration-500"
             />
@@ -408,14 +432,7 @@ export default function Navbar() {
               {SEGMENTS.map(seg => (
                 <button
                   key={seg.id}
-                  onClick={() => {
-                    setActiveSegment(seg.id);
-                    if (seg.id === "other") {
-                      setActiveCategory("other");
-                    } else if (seg.id === "uav" && PRODUCT_CATEGORIES.length > 0) {
-                      setActiveCategory(PRODUCT_CATEGORIES[0].id);
-                    }
-                  }}
+                  onClick={() => setActiveSegment(seg.id)}
                   className={`flex items-center gap-2 px-6 py-1.5 text-[8px] tracking-[0.15em] uppercase font-bold transition-all duration-300 ${activeSegment === seg.id
                       ? "bg-[#ffc812] text-black shadow-sm"
                       : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white"
@@ -433,7 +450,7 @@ export default function Navbar() {
               ))}
             </div>
 
-            {activeSegment === "uav" || activeSegment === "other" ? (
+            {PRODUCT_CATEGORIES.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-0">
                 {/* Left: category list */}
                 <div className="col-span-1 md:col-span-3 border-b md:border-b-0 md:border-r border-white/10 pr-0 md:pr-4 pb-4 md:pb-0 mb-4 md:mb-0">
@@ -441,7 +458,7 @@ export default function Navbar() {
                     Product Lines
                   </p>
                   <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                    {PRODUCT_CATEGORIES.filter(c => activeSegment === "other" ? c.id === "other" : c.id !== "other").map((cat) => (
+                    {PRODUCT_CATEGORIES.map((cat) => (
                       <button
                         key={cat.id}
                         onClick={() => setActiveCategory(cat.id)}
@@ -501,15 +518,7 @@ export default function Navbar() {
                       >
                         <div className="w-full h-12 md:h-16 bg-white/5 mb-1 md:mb-2 flex items-center justify-center group-hover:bg-[#ffc812]/5 transition-colors duration-200">
                           <div className="flex flex-col items-center">
-                            {p.series === 'haemng' || p.series === 'maelard' ? (
-                              <img loading="lazy" decoding="async"
-                                src={`${import.meta.env.BASE_URL}${p.series === 'maelard' ? 'Maelard.svg' : 'haemng.svg'}`}
-                                alt={p.series}
-                                className="h-5 md:h-7 w-auto opacity-80 brightness-0 invert"
-                              />
-                            ) : (
-                              <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="favicon" className="h-4 md:h-5 w-auto opacity-70 brightness-0 invert" />
-                            )}
+                            <ProductThumb product={p} logoUrl={activeCat.logoUrl} />
                           </div>
                         </div>
                         <p className="text-xs truncate" style={{ fontFamily: "Michroma, sans-serif", fontWeight: 400 }}>
@@ -540,7 +549,7 @@ export default function Navbar() {
 
                   <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-0">
                     <p className="text-[9px] md:text-[10px] text-white/30" style={{ fontFamily: "Lexend, sans-serif" }}>
-                      {products.length}+ product variants across {PRODUCT_CATEGORIES.length} lines
+                      {PRODUCT_CATEGORIES.reduce((n, c) => n + c.products.length, 0)} product variants across {PRODUCT_CATEGORIES.length} lines
                     </p>
                     <button
                       onClick={() => scrollToSection("contact")}

@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import Footer from "@/components/Footer";
+import { goToHomeSection } from "@/lib/scrollTo";
 import InvestorsSection from "@/components/InvestorsSection";
 import Reveal from "@/components/Reveal";
 
@@ -82,7 +83,7 @@ const TEAM = [
     bio: "Masters in Power Electronics · 10+ yrs R&D & commercialization · Ex CTO Swadha Energies · 2017 National Entrepreneur Award",
     initials: "DN",
     expertise: "Power Electronics · Motor Drives",
-    image: "assets/team/dinesh.png",
+    image: "assets/team/dinesh.webp",
     linkedin: "https://www.linkedin.com/in/dinesh-natarajan-41b71bb3/",
   },
   {
@@ -91,7 +92,7 @@ const TEAM = [
     bio: "Masters in Power Electronics · 10+ yrs R&D · Specialist in machine design and motor drives",
     initials: "GR",
     expertise: "Machine Design · Special Motors",
-    image: "assets/team/govindraj.png",
+    image: "assets/team/govindraj.webp",
     linkedin: "https://www.linkedin.com/in/govindaraj1290/",
   },
   {
@@ -100,7 +101,7 @@ const TEAM = [
     bio: "Bachelors in Electronics · 8+ yrs hardware design · Leads operations and production workflows",
     initials: "KD",
     expertise: "Hardware Design · Operations",
-    image: "assets/team/keerthiga.png",
+    image: "assets/team/keerthiga.webp",
     linkedin: "https://www.linkedin.com/in/keerthiga-dinesh-36793575/",
   },
   {
@@ -109,7 +110,7 @@ const TEAM = [
     bio: "Master's from Madras Institute of Technology (MIT) · 5+ yrs in motor control algorithms · FOC and sensorless control",
     initials: "AK",
     expertise: "FOC Algorithms · Sensorless Control",
-    image: "assets/team/akilesh.png",
+    image: "assets/team/akilesh.webp",
     linkedin: "https://www.linkedin.com/in/akileshkumar/",
   },
 ];
@@ -544,7 +545,8 @@ export default function About() {
 
           <Reveal delay={150}>
             <div className="flex flex-wrap gap-4">
-              <a href="mailto:dineshnatarajan@welkinrim.com"
+              <a href="/#contact"
+                onClick={(e) => { e.preventDefault(); goToHomeSection(navigate, "contact"); }}
                 className="px-8 py-3.5 bg-[#ffc812] text-black text-[10px] tracking-widest uppercase font-bold hover:bg-[#e0b212] transition-all duration-300 inline-block"
                 style={{ fontFamily: "Michroma, sans-serif", transform: "skewX(-8deg)" }}>
                 <span style={{ display: "inline-block", transform: "skewX(8deg)" }}>Get In Touch</span>

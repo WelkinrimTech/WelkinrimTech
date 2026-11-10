@@ -25,7 +25,7 @@ const socials = [
   },
   {
     label: "YouTube",
-    href: "https://youtube.com/@welkinrimtechnologies",
+    href: "https://www.youtube.com/@WelkinrimTech",
     icon: (
       <>
         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
@@ -75,7 +75,7 @@ export default function Footer() {
         <div className="md:col-span-1">
           <div className="inline-flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
             <img loading="lazy" decoding="async"
-              src={`${import.meta.env.BASE_URL}welkinrim-logo-white.svg`}
+              src={`${import.meta.env.BASE_URL}wt-logo-white.svg`}
               alt="Welkinrim Technologies"
               className="h-8 md:h-10 w-auto"
             />

@@ -20,22 +20,14 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
+        // Only the always-needed core gets its own long-cached chunk. Everything else
+        // (maps, charts, PDF export, MUI) stays with the lazy route that imports it,
+        // instead of one multi-MB vendor bundle on every page load.
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            if (id.includes('@tanstack/react-query')) {
-              return 'vendor-query';
-            }
-            if (id.includes('framer-motion')) {
-              return 'vendor-motion';
-            }
-            if (id.includes('wouter')) {
-              return 'vendor-router';
-            }
-            return 'vendor';
+          if (/node_modules\/(react|react-dom|scheduler|wouter)\//.test(id)) {
+            return 'vendor-react';
           }
+          return undefined;
         }
       }
     }

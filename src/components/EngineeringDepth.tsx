@@ -6,7 +6,7 @@ const industries = [
     label: "UAV/EVTOL",
     tabLabel: "UAV/EVTOL",
     fullLabel: "UAV/eVTOL",
-    image: "/assets/engineering/uav-evtol.png",
+    image: "/assets/engineering/uav-evtol.webp",
     testedStatus: "JSS 55555 and MIL STD 810 G Tested",
     metrics: [
       { label: "POWER",          display: "100W to 30kW" },
@@ -22,7 +22,7 @@ const industries = [
     label: "MARINE",
     tabLabel: "MARINE",
     fullLabel: "Marine",
-    image: "/assets/engineering/marine.png",
+    image: "/assets/engineering/marine.webp",
     testedStatus: "JSS 55555 and MIL STD 810 G to be Tested",
     metrics: [
       { label: "POWER",          display: "100W to 2.5kW" },
@@ -38,7 +38,7 @@ const industries = [
     label: "LAND",
     tabLabel: "LAND",
     fullLabel: "Land Vehicles",
-    image: "/assets/engineering/land.png",
+    image: "/assets/engineering/land.webp",
     testedStatus: "JSS 55555 and MIL STD 810 G to be Tested",
     metrics: [
       { label: "POWER",          display: "50W to 15kW" },
@@ -54,7 +54,7 @@ const industries = [
     label: "ROBOTICS",
     tabLabel: "ROBOTICS",
     fullLabel: "Robotics",
-    image: "/assets/engineering/robotics.png",
+    image: "/assets/engineering/robotics.webp",
     testedStatus: "JSS 55555 and MIL STD 810 G to be Tested",
     metrics: [
       { label: "POWER",          display: "100W to 30kW" },
